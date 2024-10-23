@@ -4,18 +4,19 @@ import { errorHandler } from "../../utils/error.js";
 import jwt from "jsonwebtoken";
 
 export const registerHandler = async (req, res, next) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, number, isStaff } = req.body;
   const hashedPassword = bcryptjs.hashSync(password, 10);
 
-  const newUser = new User({
-    name,
-    email,
-    password: hashedPassword,
-  });
-
   try {
+    const newUser = new User({
+      name,
+      email,
+      password: hashedPassword,
+      number,
+      isStaff,
+    });
     await newUser.save();
-    res.json("Signup successful");
+    res.status(201).json("Signup successful");
   } catch (error) {
     next(error);
   }
@@ -33,7 +34,10 @@ export const loginHandler = async (req, res, next) => {
     if (!validPassword) {
       return next(errorHandler(400, "Invalid password"));
     }
-    const token = jwt.sign({ id: validUser._id, isAdmin: validUser.isAdmin }, process.env.JWT_SECRET);
+    const token = jwt.sign(
+      { id: validUser._id, isAdmin: validUser.isAdmin },
+      process.env.JWT_SECRET
+    );
 
     const { password: pass, ...rest } = validUser._doc;
 
@@ -41,6 +45,7 @@ export const loginHandler = async (req, res, next) => {
       .status(200)
       .cookie("access_token", token, {
         httpOnly: true,
+        secure: false, 
       })
       .json(rest);
   } catch (error) {
@@ -53,7 +58,10 @@ export const googleHandler = async (req, res, next) => {
   try {
     const user = await User.findOne({ email });
     if (user) {
-      const token = jwt.sign({ id: user._id, isAdmin: user.isAdmin }, process.env.JWT_SECRET);
+      const token = jwt.sign(
+        { id: user._id, isAdmin: user.isAdmin },
+        process.env.JWT_SECRET
+      );
       const { password, ...rest } = user._doc;
       res
         .status(200)
@@ -75,7 +83,10 @@ export const googleHandler = async (req, res, next) => {
         profilePicture: googlePhotoUrl,
       });
       await newUser.save();
-      const token = jwt.sign({ id: newUser._id, isAdmin: newUser.isAdmin }, process.env.JWT_SECRET);
+      const token = jwt.sign(
+        { id: newUser._id, isAdmin: newUser.isAdmin },
+        process.env.JWT_SECRET
+      );
       const { password, ...rest } = newUser._doc;
       res
         .status(200)
