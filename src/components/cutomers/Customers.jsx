@@ -9,18 +9,18 @@ import { FaTrash, FaRegUser } from "react-icons/fa";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-const Hrm = () => {
+const CustomersComp = () => {
   const { currentUser } = useSelector((state) => state.user);
-  const [staffs, setStaffs] = useState([]);
+  const [customers, setCustomers] = useState([]);
   const [showMore, setShowMore] = useState(true);
   const [showModal, setShowModal] = useState(false);
-  const [staffIdToDelete, setStaffIdToDelete] = useState("");
+  const [customerIdToDelete, setCustomerIdToDelete] = useState("");
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   const router = useRouter();
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const fetchStaffs = async () => {
+      const fetchCustomers = async () => {
         try {
           const res = await fetch(`${apiUrl}/api/user/getusers`, {
             method: "GET",
@@ -28,7 +28,7 @@ const Hrm = () => {
           });
           const data = await res.json();
           if (res.ok) {
-            setStaffs(data.users);
+            setCustomers(data.users);
             if (data.users.length < 9) {
               setShowMore(false);
             }
@@ -39,20 +39,19 @@ const Hrm = () => {
           console.log(error.message);
         }
       };
-      fetchStaffs();
+      fetchCustomers();
     }
   }, [currentUser._id]);
 
-  console.log(staffs);
   const handleShowMore = async () => {
-    const startIndex = staffs.length;
+    const startIndex = customers.length;
     try {
       const res = await fetch(
         `${apiUrl}/api/user/getusers?startIndex=${startIndex}`
       );
       const data = await res.json();
       if (res.ok) {
-        setStaffs((prev) => [...prev, ...data.users]);
+        setCustomers((prev) => [...prev, ...data.users]);
         if (data.users.length < 9) {
           setShowMore(false);
         }
@@ -62,15 +61,15 @@ const Hrm = () => {
     }
   };
 
-  const handleDeleteStaff = async () => {
+  const handleDeleteCustomer = async () => {
     try {
-      const res = await fetch(`${apiUrl}/api/user/delete/${staffIdToDelete}`, {
+      const res = await fetch(`${apiUrl}/api/user/delete/${customerIdToDelete}`, {
         method: "DELETE",
       });
       const data = await res.json();
       if (res.ok) {
-        setStaffs((prev) =>
-          prev.filter((staff) => staff._id !== staffIdToDelete)
+        setCustomers((prev) =>
+          prev.filter((customer) => customer._id !== customerIdToDelete)
         );
         setShowModal(false);
       } else {
@@ -82,39 +81,39 @@ const Hrm = () => {
   };
 
   const handleEditClick = (id) => {
-    router.push(`/hrm/${id}/editStaff`);
+    router.push(`/customers/${id}/editCustomer`);
   };
   return (
     <div className="table-auto w-[90%] overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500">
       <Link
-        href={"/hrm/newStaff"}
+        href={"/customers/newCustomer"}
         className="p-2 border-2 font-semibold my-3 border-green-600 rounded text-green-600 flex justify-center items-center w-fit"
       >
         <span>
           <FaRegUser />
         </span>
-        +<p>add new Staff</p>
+        +<p>add new customer</p>
       </Link>
-      {currentUser.isAdmin && staffs.length > 0 ? (
+      {currentUser.isAdmin && customers.length > 0 ? (
         <>
           <Table hoverable className="shadow-md text-center">
             <Table.Head className="bg-slate-200 h-14">
-              <Table.HeadCell>STAFF NUMBER</Table.HeadCell>
+              <Table.HeadCell>CUSTOMER NUMBER</Table.HeadCell>
               <Table.HeadCell>NAME</Table.HeadCell>
               <Table.HeadCell>EMAIL</Table.HeadCell>
               <Table.HeadCell>ACTIONS</Table.HeadCell>
             </Table.Head>
 
-            {staffs.filter(staff => staff.isStaff !== false)
-              .map((staff) => (
-                <Table.Body className="divide-y" key={staff._id}>
+            {customers.filter(customer => customer.isCustomer !== false)
+              .map((customer) => (
+                <Table.Body className="divide-y" key={customer._id}>
                   <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800 h-14 border">
-                    <Table.Cell>{staff.number}</Table.Cell>
-                    <Table.Cell>{staff.name}</Table.Cell>
-                    <Table.Cell>{staff.email}</Table.Cell>
+                    <Table.Cell>{customer.number}</Table.Cell>
+                    <Table.Cell>{customer.name}</Table.Cell>
+                    <Table.Cell>{customer.email}</Table.Cell>
                     <Table.Cell className="flex text-center justify-center items-center gap-3 my-3">
                       <button
-                        onClick={() => handleEditClick(staff._id)}
+                        onClick={() => handleEditClick(customer._id)}
                         className="font-medium flex justify-center items-center gap-2 rounded bg-green-600 hover:underline cursor-pointe p-2 bg-red-500 text-white"
                       >
                         <span>
@@ -125,7 +124,7 @@ const Hrm = () => {
                       <div
                         onClick={() => {
                           setShowModal(true);
-                          setStaffIdToDelete(staff._id);
+                          setCustomerIdToDelete(customer._id);
                         }}
                         className="font-medium flex justify-center items-center gap-2 rounded  bg-red-600 hover:underline cursor-pointe p-2 bg-red-500 text-white"
                       >
@@ -149,7 +148,7 @@ const Hrm = () => {
           )}
         </>
       ) : (
-        <p>You have no staffss yet!</p>
+        <p>You have no customers yet!</p>
       )}
       <Modal
         show={showModal}
@@ -162,10 +161,10 @@ const Hrm = () => {
           <div className="text-center">
             <HiOutlineExclamationCircle className="h-14 w-14 text-gray-400 dark:text-gray-200 mb-4 mx-auto" />
             <h3 className="mb-5 text-lg text-gray-500 dark:text-gray-400">
-              Are you sure you want to delete this staff?
+              Are you sure you want to delete this customer?
             </h3>
             <div className="flex justify-center gap-4">
-              <Button color="failure" onClick={handleDeleteStaff}>
+              <Button color="failure" onClick={handleDeleteCustomer}>
                 Yes, I'm sure
               </Button>
               <Button color="gray" onClick={() => setShowModal(false)}>
@@ -179,4 +178,4 @@ const Hrm = () => {
   );
 };
 
-export default Hrm;
+export default CustomersComp;

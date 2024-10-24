@@ -3,22 +3,21 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 
-const FormRegister = ({
+const FormRegisterCustomer = ({
   _id,
   name: existingName,
   email: existingEmail,
   number: existingNumber,
   password: existingPassword,
-  isStaff: existingIsStaff,
+  isCustomer: existingIsCustomer,
 }) => {
-
   const [errorMessage, setErrorMessage] = useState(null);
   const [loading, setLoading] = useState(false);
   const router = useRouter(); // Corrected to router (instead of navigate)
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 // Initialize formData with default values
   
-  const generateStaffNumber = () => {
+  const generateCustomerNumber = () => {
     const now = new Date();
     return `ST-${now.getFullYear()}${(now.getMonth() + 1)
       .toString()
@@ -28,22 +27,21 @@ const FormRegister = ({
       .slice(-4)}`; // Output format: 'ST-20241022-1234'
   };
 
-  const staffNumber = generateStaffNumber();
-
+  const customerNumber = generateCustomerNumber();
   const [formData, setFormData] = useState({
-    number: existingNumber || staffNumber,
+    number: existingNumber || customerNumber,
     name: existingName || '',
     email: existingEmail || '',
     password: existingPassword || '',
-    isStaff: existingIsStaff || false, // Changed to false as default for checkbox
+    isCustomer: existingIsCustomer || false, // Changed to false as default for checkbox
   });
-  
+  console.log(formData)
   const handleInputChange = (e) => {
     const { id, value, checked } = e.target; // Destructure the event target properties
 
     setFormData((prev) => ({
       ...prev,
-      [id]: id === "isStaff" ? checked : value, // Set value based on field type
+      [id]: id === "isCustomer" ? checked : value, // Set value based on field type
     }));
   };
  // Generate new staff number
@@ -57,7 +55,7 @@ const FormRegister = ({
       : `${apiUrl}/api/auth/register`;
 
     const res = await fetch(url, {
-      method: _id ? "PUT" : "PUT",
+      method: _id ? "PUT" : "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),
     });
@@ -71,14 +69,14 @@ const FormRegister = ({
     }
 
     // Successful response
-    router.push("/hrm"); // Use router.push instead of navigate.push
+    router.push("/customers"); // Use router.push instead of navigate.push
     setLoading(false); // Reset loading after submission
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md p-8 space-y-6 bg-white shadow-md rounded-md">
-        <h2 className="text-2xl font-bold text-center">{_id ? "Edit Staff" : "Register"}</h2>
+        <h2 className="text-2xl font-bold text-center">{_id ? "Edit Customer" : "Register Customer"}</h2>
         <form className="space-y-4" onSubmit={handleSubmit}>
           {/* Number Field */}
           <div>
@@ -86,7 +84,7 @@ const FormRegister = ({
               htmlFor="number"
               className="block text-sm font-medium text-gray-700"
             >
-              Staff Number
+              Customer Number
             </label>
             <input
               type="text"
@@ -102,7 +100,7 @@ const FormRegister = ({
               htmlFor="name"
               className="block text-sm font-medium text-gray-700"
             >
-              Staff Name
+              Customer Name
             </label>
             <input
               type="text"
@@ -119,7 +117,7 @@ const FormRegister = ({
               htmlFor="email"
               className="block text-sm font-medium text-gray-700"
             >
-              Staff Email
+              Customer Email
             </label>
             <input
               type="email"
@@ -136,7 +134,7 @@ const FormRegister = ({
               htmlFor="password"
               className="block text-sm font-medium text-gray-700"
             >
-              Staff Password
+              Customer Password
             </label>
             <input
               type="password"
@@ -151,12 +149,12 @@ const FormRegister = ({
           <div>
             <label>
               <input
-                id="isStaff"
+                id="isCustomer"
                 type="checkbox"
-                checked={formData.isStaff}
+                checked={formData.isCustomer}
                 onChange={handleInputChange}
               />
-              Is Staff
+              Is Customer
             </label>
           </div>
 
@@ -167,7 +165,7 @@ const FormRegister = ({
               className="w-full px-4 py-2 text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
               disabled={loading}
             >
-              {_id ? "Edit Staff" : "Add Staff"}
+              {_id ? "Edit Customer" : "Add Customer"}
             </button>
           </div>
 
@@ -183,4 +181,4 @@ const FormRegister = ({
   );
 };
 
-export default FormRegister;
+export default FormRegisterCustomer;
