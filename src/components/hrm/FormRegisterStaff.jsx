@@ -5,18 +5,17 @@ import { useRouter } from "next/navigation";
 
 const FormRegisterStaff = ({
   _id,
-  name: existingName,
-  email: existingEmail,
-  number: existingNumber,
-  password: existingPassword,
+  nameStaff: existingName,
+  emailStaff: existingEmail,
+  numberStaff: existingNumber,
+  passwordStaff: existingPassword,
   isStaff: existingIsStaff,
 }) => {
 
   const [errorMessage, setErrorMessage] = useState(null);
   const [loading, setLoading] = useState(false);
-  const router = useRouter(); // Corrected to router (instead of navigate)
+  const router = useRouter(); 
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-// Initialize formData with default values
   
   const generateStaffNumber = () => {
     const now = new Date();
@@ -25,36 +24,35 @@ const FormRegisterStaff = ({
       .padStart(2, "0")}${now.getDate().toString().padStart(2, "0")}-${now
       .getTime()
       .toString()
-      .slice(-4)}`; // Output format: 'ST-20241022-1234'
+      .slice(-4)}`;
   };
 
   const staffNumber = generateStaffNumber();
 
   const [formData, setFormData] = useState({
-    number: existingNumber || staffNumber,
-    name: existingName || '',
-    email: existingEmail || '',
-    password: existingPassword || '',
-    isStaff: existingIsStaff || false, // Changed to false as default for checkbox
+    nameStaff: existingName || '',
+    emailStaff: existingEmail || '',
+    passwordStaff: existingPassword || '',
+    numberStaff: existingNumber || staffNumber,
+    isStaff: existingIsStaff || false, 
   });
-  
+  console.log(formData)
   const handleInputChange = (e) => {
-    const { id, value, checked } = e.target; // Destructure the event target properties
+    const { id, value, checked } = e.target; 
 
     setFormData((prev) => ({
       ...prev,
-      [id]: id === "isStaff" ? checked : value, // Set value based on field type
+      [id]: id === "isStaff" ? checked : value,
     }));
   };
- // Generate new staff number
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true); // Set loading to true when starting the request
+    setLoading(true);
 
     const url = _id 
-      ? `${apiUrl}/api/user/update/${_id}` 
-      : `${apiUrl}/api/auth/register`;
+      ? `${apiUrl}/api/hrm/updateStaff/${_id}` 
+      : `${apiUrl}/api/hrm/registerStaff`;
 
     const res = await fetch(url, {
       method: _id ? "PUT" : "POST",
@@ -65,14 +63,11 @@ const FormRegisterStaff = ({
     const data = await res.json();
     
     if (!res.ok) {
-      setErrorMessage(data.message || 'An error occurred'); // Set error message if any error occurs
-      setLoading(false); // Set loading to false on error
+      setErrorMessage(data.message || 'An error occurred');
+      setLoading(false);
       return;
     }
-
-    // Successful response
-    router.push("/hrm"); // Use router.push instead of navigate.push
-    setLoading(false); // Reset loading after submission
+    router.push("/hrm"); 
   };
 
   return (
@@ -90,8 +85,8 @@ const FormRegisterStaff = ({
             </label>
             <input
               type="text"
-              id="number"
-              value={formData.number}
+              id="numberStaff"
+              value={formData.numberStaff}
               className="w-full p-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
               readOnly // Optionally make it read-only or manage it via state
             />
@@ -106,8 +101,8 @@ const FormRegisterStaff = ({
             </label>
             <input
               type="text"
-              id="name"
-              value={formData.name}
+              id="nameStaff"
+              value={formData.nameStaff}
               onChange={handleInputChange}
               className="w-full p-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
             />
@@ -123,8 +118,8 @@ const FormRegisterStaff = ({
             </label>
             <input
               type="email"
-              id="email"
-              value={formData.email}
+              id="emailStaff"
+              value={formData.emailStaff}
               onChange={handleInputChange}
               className="w-full p-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
             />
@@ -140,8 +135,7 @@ const FormRegisterStaff = ({
             </label>
             <input
               type="password"
-              id="password"
-              value={formData.password}
+              id="passwordStaff"
               onChange={handleInputChange}
               className="w-full p-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
             />

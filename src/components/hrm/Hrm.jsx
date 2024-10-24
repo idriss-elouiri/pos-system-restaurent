@@ -22,18 +22,18 @@ const Hrm = () => {
     if (typeof window !== "undefined") {
       const fetchStaffs = async () => {
         try {
-          const res = await fetch(`${apiUrl}/api/user/getusers`, {
+          const res = await fetch(`${apiUrl}/api/hrm/getStaffs`, {
             method: "GET",
-            credentials: "include", // يضمن إرسال الكوكيز مع الطلب
+            credentials: "include", 
           });
           const data = await res.json();
           if (res.ok) {
-            setStaffs(data.users);
-            if (data.users.length < 9) {
+            setStaffs(data.Staffs);
+            if (data.Staffs.length < 9) {
               setShowMore(false);
             }
           } else {
-            console.log(data.message); // طباعة أي رسالة خطأ
+            console.log(data.message); 
           }
         } catch (error) {
           console.log(error.message);
@@ -48,12 +48,12 @@ const Hrm = () => {
     const startIndex = staffs.length;
     try {
       const res = await fetch(
-        `${apiUrl}/api/user/getusers?startIndex=${startIndex}`
+        `${apiUrl}/api/hrm/getStaffs?startIndex=${startIndex}`
       );
       const data = await res.json();
       if (res.ok) {
-        setStaffs((prev) => [...prev, ...data.users]);
-        if (data.users.length < 9) {
+        setStaffs((prev) => [...prev, ...data.Staffs]);
+        if (data.Staffs.length < 9) {
           setShowMore(false);
         }
       }
@@ -64,9 +64,12 @@ const Hrm = () => {
 
   const handleDeleteStaff = async () => {
     try {
-      const res = await fetch(`${apiUrl}/api/user/delete/${staffIdToDelete}`, {
-        method: "DELETE",
-      });
+      const res = await fetch(
+        `${apiUrl}/api/hrm/deleteStaff/${staffIdToDelete}`,
+        {
+          method: "DELETE",
+        }
+      );
       const data = await res.json();
       if (res.ok) {
         setStaffs((prev) =>
@@ -80,7 +83,6 @@ const Hrm = () => {
       console.log(error.message);
     }
   };
-
   const handleEditClick = (id) => {
     router.push(`/hrm/${id}/editStaff`);
   };
@@ -95,7 +97,7 @@ const Hrm = () => {
         </span>
         +<p>add new Staff</p>
       </Link>
-      {currentUser.isAdmin && staffs.length > 0 ? (
+      {currentUser.isAdmin && staffs?.length > 0 ? (
         <>
           <Table hoverable className="shadow-md text-center">
             <Table.Head className="bg-slate-200 h-14">
@@ -105,39 +107,38 @@ const Hrm = () => {
               <Table.HeadCell>ACTIONS</Table.HeadCell>
             </Table.Head>
 
-            {staffs.filter(staff => staff.isStaff !== false)
-              .map((staff) => (
-                <Table.Body className="divide-y" key={staff._id}>
-                  <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800 h-14 border">
-                    <Table.Cell>{staff.number}</Table.Cell>
-                    <Table.Cell>{staff.name}</Table.Cell>
-                    <Table.Cell>{staff.email}</Table.Cell>
-                    <Table.Cell className="flex text-center justify-center items-center gap-3 my-3">
-                      <button
-                        onClick={() => handleEditClick(staff._id)}
-                        className="font-medium flex justify-center items-center gap-2 rounded bg-green-600 hover:underline cursor-pointe p-2 bg-red-500 text-white"
-                      >
-                        <span>
-                          <HiPencilAlt />
-                        </span>{" "}
-                        Updated
-                      </button>
-                      <div
-                        onClick={() => {
-                          setShowModal(true);
-                          setStaffIdToDelete(staff._id);
-                        }}
-                        className="font-medium flex justify-center items-center gap-2 rounded  bg-red-600 hover:underline cursor-pointe p-2 bg-red-500 text-white"
-                      >
-                        <span>
-                          <FaTrash />
-                        </span>{" "}
-                        Delete
-                      </div>
-                    </Table.Cell>
-                  </Table.Row>
-                </Table.Body>
-              ))}
+            {staffs.map((staff) => (
+              <Table.Body className="divide-y" key={staff._id}>
+                <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800 h-14 border">
+                  <Table.Cell>{staff.numberStaff}</Table.Cell>
+                  <Table.Cell>{staff.nameStaff}</Table.Cell>
+                  <Table.Cell>{staff.emailStaff}</Table.Cell>
+                  <Table.Cell className="flex text-center justify-center items-center gap-3 my-3">
+                    <button
+                      onClick={() => handleEditClick(staff._id)}
+                      className="font-medium flex justify-center items-center gap-2 rounded bg-green-600 hover:underline cursor-pointe p-2 bg-red-500 text-white"
+                    >
+                      <span>
+                        <HiPencilAlt />
+                      </span>{" "}
+                      Updated
+                    </button>
+                    <div
+                      onClick={() => {
+                        setShowModal(true);
+                        setStaffIdToDelete(staff._id);
+                      }}
+                      className="font-medium flex justify-center items-center gap-2 rounded  bg-red-600 hover:underline cursor-pointe p-2 bg-red-500 text-white"
+                    >
+                      <span>
+                        <FaTrash />
+                      </span>{" "}
+                      Delete
+                    </div>
+                  </Table.Cell>
+                </Table.Row>
+              </Table.Body>
+            ))}
           </Table>
           {showMore && (
             <button

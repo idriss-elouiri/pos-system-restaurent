@@ -5,54 +5,42 @@ import { useRouter } from "next/navigation";
 
 const FormRegisterCustomer = ({
   _id,
-  name: existingName,
-  email: existingEmail,
-  number: existingNumber,
-  password: existingPassword,
+  nameCustomer: existingName,
+  emailCustomer: existingEmail,
+  phoneNumberCustomer: existingphoneNumberCustomer,
+  passwordCustomer: existingPassword,
   isCustomer: existingIsCustomer,
 }) => {
+
   const [errorMessage, setErrorMessage] = useState(null);
   const [loading, setLoading] = useState(false);
-  const router = useRouter(); // Corrected to router (instead of navigate)
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-// Initialize formData with default values
-  
-  const generateCustomerNumber = () => {
-    const now = new Date();
-    return `ST-${now.getFullYear()}${(now.getMonth() + 1)
-      .toString()
-      .padStart(2, "0")}${now.getDate().toString().padStart(2, "0")}-${now
-      .getTime()
-      .toString()
-      .slice(-4)}`; // Output format: 'ST-20241022-1234'
-  };
-
-  const customerNumber = generateCustomerNumber();
+  const router = useRouter(); 
   const [formData, setFormData] = useState({
-    number: existingNumber || customerNumber,
-    name: existingName || '',
-    email: existingEmail || '',
-    password: existingPassword || '',
-    isCustomer: existingIsCustomer || false, // Changed to false as default for checkbox
+    nameCustomer: existingName || '',
+    emailCustomer: existingEmail || '',
+    passwordCustomer: existingPassword || '',
+    phoneNumberCustomer: existingphoneNumberCustomer || "",
+    isCustomer: existingIsCustomer || false, 
   });
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   console.log(formData)
+
   const handleInputChange = (e) => {
-    const { id, value, checked } = e.target; // Destructure the event target properties
+    const { id, value, checked } = e.target; 
 
     setFormData((prev) => ({
       ...prev,
-      [id]: id === "isCustomer" ? checked : value, // Set value based on field type
+      [id]: id === "isCustomer" ? checked : value,
     }));
   };
- // Generate new staff number
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true); // Set loading to true when starting the request
+    setLoading(true);
 
     const url = _id 
-      ? `${apiUrl}/api/user/update/${_id}` 
-      : `${apiUrl}/api/auth/register`;
+      ? `${apiUrl}/api/customer/updateCustomer/${_id}` 
+      : `${apiUrl}/api/customer/registerCustomer`;
 
     const res = await fetch(url, {
       method: _id ? "PUT" : "POST",
@@ -63,14 +51,11 @@ const FormRegisterCustomer = ({
     const data = await res.json();
     
     if (!res.ok) {
-      setErrorMessage(data.message || 'An error occurred'); // Set error message if any error occurs
-      setLoading(false); // Set loading to false on error
+      setErrorMessage(data.message || 'An error occurred');
+      setLoading(false);
       return;
     }
-
-    // Successful response
-    router.push("/customers"); // Use router.push instead of navigate.push
-    setLoading(false); // Reset loading after submission
+    router.push("/customers"); 
   };
 
   return (
@@ -84,14 +69,14 @@ const FormRegisterCustomer = ({
               htmlFor="number"
               className="block text-sm font-medium text-gray-700"
             >
-              Customer Number
+              Customer Number Phone
             </label>
             <input
               type="text"
-              id="number"
-              value={formData.number}
+              id="phoneNumberCustomer"
+              value={formData.phoneNumberCustomer}
+              onChange={handleInputChange}
               className="w-full p-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-              readOnly // Optionally make it read-only or manage it via state
             />
           </div>
           {/* Name Field */}
@@ -104,8 +89,8 @@ const FormRegisterCustomer = ({
             </label>
             <input
               type="text"
-              id="name"
-              value={formData.name}
+              id="nameCustomer"
+              value={formData.nameCustomer}
               onChange={handleInputChange}
               className="w-full p-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
             />
@@ -121,8 +106,8 @@ const FormRegisterCustomer = ({
             </label>
             <input
               type="email"
-              id="email"
-              value={formData.email}
+              id="emailCustomer"
+              value={formData.emailCustomer}
               onChange={handleInputChange}
               className="w-full p-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
             />
@@ -138,8 +123,7 @@ const FormRegisterCustomer = ({
             </label>
             <input
               type="password"
-              id="password"
-              value={formData.password}
+              id="passwordCustomer"
               onChange={handleInputChange}
               className="w-full p-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
             />

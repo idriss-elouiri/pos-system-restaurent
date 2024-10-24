@@ -9,7 +9,7 @@ import { FaTrash, FaRegUser } from "react-icons/fa";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-const CustomersComp = () => {
+const Hrm = () => {
   const { currentUser } = useSelector((state) => state.user);
   const [customers, setCustomers] = useState([]);
   const [showMore, setShowMore] = useState(true);
@@ -20,39 +20,40 @@ const CustomersComp = () => {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const fetchCustomers = async () => {
+      const fetchcustomers = async () => {
         try {
-          const res = await fetch(`${apiUrl}/api/user/getusers`, {
+          const res = await fetch(`${apiUrl}/api/customer/getCustomers`, {
             method: "GET",
-            credentials: "include", // يضمن إرسال الكوكيز مع الطلب
+            credentials: "include",
           });
           const data = await res.json();
           if (res.ok) {
-            setCustomers(data.users);
-            if (data.users.length < 9) {
+            setCustomers(data.customers);
+            if (data.customers.length < 9) {
               setShowMore(false);
             }
           } else {
-            console.log(data.message); // طباعة أي رسالة خطأ
+            console.log(data.message);
           }
         } catch (error) {
           console.log(error.message);
         }
       };
-      fetchCustomers();
+      fetchcustomers();
     }
   }, [currentUser._id]);
 
+  console.log(customers);
   const handleShowMore = async () => {
     const startIndex = customers.length;
     try {
       const res = await fetch(
-        `${apiUrl}/api/user/getusers?startIndex=${startIndex}`
+        `${apiUrl}/api/customer/getCustomer?startIndex=${startIndex}`
       );
       const data = await res.json();
       if (res.ok) {
-        setCustomers((prev) => [...prev, ...data.users]);
-        if (data.users.length < 9) {
+        setCustomers((prev) => [...prev, ...data.customers]);
+        if (data.customers.length < 9) {
           setShowMore(false);
         }
       }
@@ -63,13 +64,16 @@ const CustomersComp = () => {
 
   const handleDeleteCustomer = async () => {
     try {
-      const res = await fetch(`${apiUrl}/api/user/delete/${customerIdToDelete}`, {
-        method: "DELETE",
-      });
+      const res = await fetch(
+        `${apiUrl}/api/customer/deleteCustomer/${customerIdToDelete}`,
+        {
+          method: "DELETE",
+        }
+      );
       const data = await res.json();
       if (res.ok) {
         setCustomers((prev) =>
-          prev.filter((customer) => customer._id !== customerIdToDelete)
+          prev.filter((Customer) => Customer._id !== customerIdToDelete)
         );
         setShowModal(false);
       } else {
@@ -79,7 +83,6 @@ const CustomersComp = () => {
       console.log(error.message);
     }
   };
-
   const handleEditClick = (id) => {
     router.push(`/customers/${id}/editCustomer`);
   };
@@ -92,51 +95,50 @@ const CustomersComp = () => {
         <span>
           <FaRegUser />
         </span>
-        +<p>add new customer</p>
+        +<p>add new Customer</p>
       </Link>
-      {currentUser.isAdmin && customers.length > 0 ? (
+      {currentUser.isAdmin && customers?.length > 0 ? (
         <>
           <Table hoverable className="shadow-md text-center">
             <Table.Head className="bg-slate-200 h-14">
-              <Table.HeadCell>CUSTOMER NUMBER</Table.HeadCell>
               <Table.HeadCell>NAME</Table.HeadCell>
+              <Table.HeadCell>CUSTOMER PHONE NUMBER</Table.HeadCell>
               <Table.HeadCell>EMAIL</Table.HeadCell>
               <Table.HeadCell>ACTIONS</Table.HeadCell>
             </Table.Head>
 
-            {customers.filter(customer => customer.isCustomer !== false)
-              .map((customer) => (
-                <Table.Body className="divide-y" key={customer._id}>
-                  <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800 h-14 border">
-                    <Table.Cell>{customer.number}</Table.Cell>
-                    <Table.Cell>{customer.name}</Table.Cell>
-                    <Table.Cell>{customer.email}</Table.Cell>
-                    <Table.Cell className="flex text-center justify-center items-center gap-3 my-3">
-                      <button
-                        onClick={() => handleEditClick(customer._id)}
-                        className="font-medium flex justify-center items-center gap-2 rounded bg-green-600 hover:underline cursor-pointe p-2 bg-red-500 text-white"
-                      >
-                        <span>
-                          <HiPencilAlt />
-                        </span>{" "}
-                        Updated
-                      </button>
-                      <div
-                        onClick={() => {
-                          setShowModal(true);
-                          setCustomerIdToDelete(customer._id);
-                        }}
-                        className="font-medium flex justify-center items-center gap-2 rounded  bg-red-600 hover:underline cursor-pointe p-2 bg-red-500 text-white"
-                      >
-                        <span>
-                          <FaTrash />
-                        </span>{" "}
-                        Delete
-                      </div>
-                    </Table.Cell>
-                  </Table.Row>
-                </Table.Body>
-              ))}
+            {customers.map((customer) => (
+              <Table.Body className="divide-y" key={customer._id}>
+                <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800 h-14 border">
+                  <Table.Cell>{customer.nameCustomer}</Table.Cell>
+                  <Table.Cell>{customer.phoneNumberCustomer}</Table.Cell>
+                  <Table.Cell>{customer.emailCustomer}</Table.Cell>
+                  <Table.Cell className="flex text-center justify-center items-center gap-3 my-3">
+                    <button
+                      onClick={() => handleEditClick(customer._id)}
+                      className="font-medium flex justify-center items-center gap-2 rounded bg-green-600 hover:underline cursor-pointe p-2 bg-red-500 text-white"
+                    >
+                      <span>
+                        <HiPencilAlt />
+                      </span>{" "}
+                      Updated
+                    </button>
+                    <div
+                      onClick={() => {
+                        setShowModal(true);
+                        setCustomerIdToDelete(staff._id);
+                      }}
+                      className="font-medium flex justify-center items-center gap-2 rounded  bg-red-600 hover:underline cursor-pointe p-2 bg-red-500 text-white"
+                    >
+                      <span>
+                        <FaTrash />
+                      </span>{" "}
+                      Delete
+                    </div>
+                  </Table.Cell>
+                </Table.Row>
+              </Table.Body>
+            ))}
           </Table>
           {showMore && (
             <button
@@ -148,7 +150,7 @@ const CustomersComp = () => {
           )}
         </>
       ) : (
-        <p>You have no customers yet!</p>
+        <p>You have no customerss yet!</p>
       )}
       <Modal
         show={showModal}
@@ -161,7 +163,7 @@ const CustomersComp = () => {
           <div className="text-center">
             <HiOutlineExclamationCircle className="h-14 w-14 text-gray-400 dark:text-gray-200 mb-4 mx-auto" />
             <h3 className="mb-5 text-lg text-gray-500 dark:text-gray-400">
-              Are you sure you want to delete this customer?
+              Are you sure you want to delete this staff?
             </h3>
             <div className="flex justify-center gap-4">
               <Button color="failure" onClick={handleDeleteCustomer}>
@@ -178,4 +180,4 @@ const CustomersComp = () => {
   );
 };
 
-export default CustomersComp;
+export default Hrm;

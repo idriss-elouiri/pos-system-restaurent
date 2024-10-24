@@ -7,34 +7,36 @@ import FormRegisterStaff from "./FormRegisterStaff";
 const EditStaff = () => {
   const { id } = useParams();
   const [editStaff, setEditStaff] = useState(null);
-  const [loading, setLoading] = useState(true); // حالة التحميل
-  const [error, setError] = useState(null); // حالة الخطأ
+  const [loading, setLoading] = useState(true); 
+  const [error, setError] = useState(null); 
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-
+console.log(id)
   useEffect(() => {
     const getStaff = async () => {
       try {
-        const res = await fetch(`${apiUrl}/api/user/${id}`);
+        const res = await fetch(`${apiUrl}/api/hrm/${id}`);
         const data = await res.json();
 
         if (!res.ok) {
-          throw new Error(data.message || 'Failed to fetch staff data'); // إذا كانت الاستجابة غير جيدة
+          throw new Error(data.message || 'Failed to fetch staff data'); 
         }
 
-        setEditStaff(data); // تعيين البيانات
+        setEditStaff(data); 
       } catch (err) {
-        setError(err.message); // تعيين الخطأ
+        setError(err.message); 
       } finally {
-        setLoading(false); // تعيين حالة التحميل على false بعد الانتهاء
+        setLoading(false);
       }
     };
-    getStaff();
+    if(id){
+
+        getStaff();
+    }
   }, [id]);
+  console.log(editStaff)
 
-  if (loading) return <p>Loading...</p>; // رسالة التحميل
-  if (error) return <p>Error: {error}</p>; // رسالة الخطأ
-
-  // تحقق من وجود بيانات editStaff قبل التمرير
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>; 
   return editStaff ? <FormRegisterStaff {...editStaff} /> : <p>No staff data available</p>;
 };
 

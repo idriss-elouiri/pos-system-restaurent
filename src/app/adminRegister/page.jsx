@@ -1,6 +1,6 @@
 "use client"
 
-import Register from "@/components/registiration/Register"
+import Register from "@/components/adminRegistiration/Register"
 
 const register = () => {
   return (

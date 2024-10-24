@@ -1,19 +1,15 @@
-import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  signInStart,
-  signInSuccess,
-  signInFailure,
-} from "../../redux/user/userSlice";
-export default function Login() {
+import React, { useState } from "react";
+
+export default function Register() {
   const [formData, setFormData] = useState({
+    name: "",
     email: "",
     password: "",
   });
-  const { loading, error: errorMessage } = useSelector((state) => state.user);
-  const dispatch = useDispatch();
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [loading, setLoading] = useState(false);
   const navigate = useRouter();
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
@@ -25,32 +21,53 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      dispatch(signInStart());
-      const res = await fetch(`${apiUrl}/api/auth/login`, {
+      setLoading(true);
+      setErrorMessage(null);
+      const res = await fetch(`${apiUrl}/api/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
-        credentials: 'include'
       });
       const data = await res.json();
       if (data.success === false) {
-        dispatch(signInFailure(data.message));
+         setErrorMessage(data.message);
+         setLoading(false);
       }
-
       if (res.ok) {
-        dispatch(signInSuccess(data));
-        navigate.push("/");
+        navigate.push("/adminLogin");
+        setErrorMessage(null);
+        setLoading(false);
       }
     } catch (error) {
-      dispatch(signInFailure(error.message));
+      setErrorMessage(error.message);
+      setLoading(false);
     }
   };
-
+  console.log(formData);
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md p-8 space-y-6 bg-white shadow-md rounded-md">
-        <h2 className="text-2xl font-bold text-center">Login</h2>
+        <h2 className="text-2xl font-bold text-center">Register</h2>
         <form className="space-y-4" onSubmit={handleSubmit}>
+          {/* Username Field */}
+          <div>
+            <label
+              htmlFor="username"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Username
+            </label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              value={formData.name}
+              onChange={handleInputChange}
+              className="w-full p-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              placeholder="Enter your name"
+            />
+          </div>
+
           {/* Email Field */}
           <div>
             <label
@@ -88,8 +105,8 @@ export default function Login() {
               placeholder="Enter your password"
             />
           </div>
-          <Link href="/register" className="my-1">
-            I dont have an account
+          <Link href="/login" className="my-1">
+            I have an account
           </Link>
           {/* Submit Button */}
           <div>
@@ -98,10 +115,8 @@ export default function Login() {
               className="w-full px-4 py-2 text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
               disabled={loading}
             >
-              {loading ? "Loading" : "Login"}
+              {loading ? "Loading" : "Register"}
             </button>
-
-            {/* Error Message */}
             {errorMessage && (
               <p className="mt-2 text-sm text-red-600" id="username-error">
                 {errorMessage}

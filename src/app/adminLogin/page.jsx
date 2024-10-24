@@ -1,6 +1,6 @@
 "use client"
 
-import Login from '@/components/registiration/Login'
+import Login from '@/components/adminRegistiration/Login'
 
 const login = () => {
   return (
