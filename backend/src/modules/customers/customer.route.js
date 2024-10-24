@@ -14,7 +14,7 @@ router.post("/loginCustomer", validateZod(loginCustomerShcema), customerControll
 router.put('/updateCustomer/:CustomerId', customerController.updateCustomer);
 router.delete('/deleteCustomer/:CustomerId', customerController.deleteCustomer);
 router.post('/signoutCustomer', customerController.signoutCustomer);
-router.get('/getCustomer', customerController.getCustomer);
+router.get('/getCustomers', customerController.getCustomers);
 router.get('/:CustomerId', customerController.getCustomer);
 
 export default router;

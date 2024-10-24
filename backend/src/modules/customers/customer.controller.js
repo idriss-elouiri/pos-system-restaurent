@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import Customer from "./customer.models.js"
 
 export const registerCustomerHandler = async (req, res, next) => {
-  const { nameCustomer, emailCustomer, passwordCustomer, numberCustomer, isCustomer} = req.body;
+  const { nameCustomer, emailCustomer, passwordCustomer, phoneNumberCustomer, isCustomer} = req.body;
   const hashedPassword = bcryptjs.hashSync(passwordCustomer, 10);
 
   try {
@@ -12,7 +12,7 @@ export const registerCustomerHandler = async (req, res, next) => {
       nameCustomer,
       emailCustomer,
       passwordCustomer: hashedPassword,
-      numberCustomer,
+      phoneNumberCustomer,
       isCustomer
     });
     await newcustomer.save();
@@ -53,7 +53,6 @@ export const loginCustomerHandler = async (req, res, next) => {
   }
 };
 
-
 export const updateCustomer = async (req, res, next) => {
   req.body.passwordCustomer = bcryptjs.hashSync(req.body.passwordCustomer, 10);
 
@@ -66,7 +65,7 @@ export const updateCustomer = async (req, res, next) => {
           emailCustomer: req.body.emailCustomer,
           profilePictureCustomer: req.body.profilePictureCustomer,
           passwordCustomer: req.body.passwordCustomer,
-          numberCustomer: req.body.numberCustomer,
+          phoneNumberCustomer: req.body.phoneNumberCustomer,
           isCustomer: req.body.isCustomer,
         },
       },
@@ -105,12 +104,12 @@ export const getCustomers = async (req, res, next) => {
     const limit = parseInt(req.query.limit) || 9;
     const sortDirection = req.query.sort === 'asc' ? 1 : -1;
 
-    const Customers = await Customer.find()
+    const customers = await Customer.find()
       .sort({ createdAt: sortDirection })
       .skip(startIndex)
       .limit(limit);
 
-    const CustomersWithoutPassword = Customers.map((Customer) => {
+    const CustomersWithoutPassword = customers.map((Customer) => {
       const { passwordCustomer, ...rest } = Customer._doc;
       return rest;
     });
@@ -129,7 +128,7 @@ export const getCustomers = async (req, res, next) => {
     });
 
     res.status(200).json({
-      Customers: CustomersWithoutPassword,
+      customers: CustomersWithoutPassword,
       totalCustomers,
       lastMonthCustomers,
     });
@@ -140,11 +139,11 @@ export const getCustomers = async (req, res, next) => {
 
 export const getCustomer = async (req, res, next) => {
   try {
-    const Customer = await Customer.findById(req.params.CustomerId);
-    if (!Customer) {
+    const customer = await Customer.findById(req.params.CustomerId);
+    if (!customer) {
       return next(errorHandler(404, 'Customer not found'));
     }
-    const { passwordCustomer, ...rest } = Customer._doc;
+    const { passwordCustomer, ...rest } = customer._doc;
     res.status(200).json(rest);
   } catch (error) {
     next(error);
