@@ -1,10 +1,8 @@
 import { errorHandler } from "../../utils/error.js";
 import User from "../auth/auth.models.js";
+import bcryptjs from "bcryptjs"
 
 export const updateUser = async (req, res, next) => {
-  if (req.user.id !== req.params.userId) {
-    return next(errorHandler(403, 'You are not allowed to update this user'));
-  }
  
   req.body.password = bcryptjs.hashSync(req.body.password, 10);
 
@@ -17,6 +15,8 @@ export const updateUser = async (req, res, next) => {
           email: req.body.email,
           profilePicture: req.body.profilePicture,
           password: req.body.password,
+          isStaff: req.body.isStaff,
+          isCustomer: req.body.isCustomer,
         },
       },
       { new: true }
@@ -29,9 +29,6 @@ export const updateUser = async (req, res, next) => {
 };
 
 export const deleteUser = async (req, res, next) => {
-  if (req.user.id !== req.params.userId) {
-    return next(errorHandler(403, 'You are not allowed to delete this user'));
-  }
   try {
     await User.findByIdAndDelete(req.params.userId);
     res.status(200).json('User has been deleted');
@@ -52,7 +49,6 @@ export const signout = (req, res, next) => {
 };
 
 export const getUsers = async (req, res, next) => {
-
   try {
     const startIndex = parseInt(req.query.startIndex) || 0;
     const limit = parseInt(req.query.limit) || 9;
