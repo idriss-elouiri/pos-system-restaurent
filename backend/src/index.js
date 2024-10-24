@@ -2,6 +2,8 @@ import express from "express";
 import cors from "cors";
 import { connectDb } from "./config/db.js";
 import authRouter from "./modules/auth/auth.route.js";
+import customerRouter from "./modules/customers/customer.route.js";
+import hrmRouter from "./modules/hrm/hrm.route.js";
 import userRouter from "./modules/user/user.route.js";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
@@ -18,6 +20,8 @@ app.use(cors({
   credentials: true // Enable cookies
 }));
 
+app.use("/api/hrm", hrmRouter);
+app.use("/api/customer", customerRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
 

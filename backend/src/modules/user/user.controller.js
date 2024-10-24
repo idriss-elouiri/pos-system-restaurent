@@ -3,7 +3,6 @@ import User from "../auth/auth.models.js";
 import bcryptjs from "bcryptjs"
 
 export const updateUser = async (req, res, next) => {
- 
   req.body.password = bcryptjs.hashSync(req.body.password, 10);
 
   try {
@@ -15,8 +14,6 @@ export const updateUser = async (req, res, next) => {
           email: req.body.email,
           profilePicture: req.body.profilePicture,
           password: req.body.password,
-          isStaff: req.body.isStaff,
-          isCustomer: req.body.isCustomer,
         },
       },
       { new: true }

@@ -4,7 +4,7 @@ import { errorHandler } from "../../utils/error.js";
 import jwt from "jsonwebtoken";
 
 export const registerHandler = async (req, res, next) => {
-  const { name, email, password, number, isStaff, isCustomer } = req.body;
+  const { name, email, password} = req.body;
   const hashedPassword = bcryptjs.hashSync(password, 10);
 
   try {
@@ -12,9 +12,6 @@ export const registerHandler = async (req, res, next) => {
       name,
       email,
       password: hashedPassword,
-      number,
-      isStaff,
-      isCustomer
     });
     await newUser.save();
     res.status(201).json("Signup successful");
