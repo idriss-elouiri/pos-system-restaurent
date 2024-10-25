@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { useRouter } from 'next/navigation';
 import { FaUser, FaUsers } from "react-icons/fa";
+import { AiFillProduct } from "react-icons/ai";
 
 export default function Sidebar({show}) {
   const inactiveLink = 'flex gap-1 p-1';
@@ -30,6 +31,11 @@ export default function Sidebar({show}) {
         <span className={pathname === '/customers' ? activeIcon : inactiveIcon}><FaUsers/></span>
 
         CUSTOMERS
+        </Link>
+        <Link href={'/products'} className={pathname === ('/products') ? activeLink : inactiveLink}>
+        <span className={pathname === '/products' ? activeIcon : inactiveIcon}><AiFillProduct/></span>
+
+        PRODUCTS
         </Link>
         <Link href={'/orders'} className={pathname === ('/orders') ? activeLink : inactiveLink}>
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={pathname === ('/orders') ? activeIcon : inactiveIcon}>
