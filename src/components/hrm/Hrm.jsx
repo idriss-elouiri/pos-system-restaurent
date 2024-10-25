@@ -1,8 +1,6 @@
 "use client";
 
-import React from "react";
-import { Modal, Table, Button } from "flowbite-react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { HiOutlineExclamationCircle, HiPencilAlt } from "react-icons/hi";
 import { FaTrash, FaRegUser } from "react-icons/fa";
@@ -24,7 +22,7 @@ const Hrm = () => {
         try {
           const res = await fetch(`${apiUrl}/api/hrm/getStaffs`, {
             method: "GET",
-            credentials: "include", 
+            credentials: "include",
           });
           const data = await res.json();
           if (res.ok) {
@@ -33,7 +31,7 @@ const Hrm = () => {
               setShowMore(false);
             }
           } else {
-            console.log(data.message); 
+            console.log(data.message);
           }
         } catch (error) {
           console.log(error.message);
@@ -43,7 +41,6 @@ const Hrm = () => {
     }
   }, [currentUser._id]);
 
-  console.log(staffs);
   const handleShowMore = async () => {
     const startIndex = staffs.length;
     try {
@@ -83,99 +80,97 @@ const Hrm = () => {
       console.log(error.message);
     }
   };
+
   const handleEditClick = (id) => {
     router.push(`/hrm/${id}/editStaff`);
   };
+
   return (
-    <div className="table-auto w-[90%] overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500">
+    <div className="w-[90%] mx-auto p-4 overflow-x-auto">
       <Link
-        href={"/hrm/newStaff"}
-        className="p-2 border-2 font-semibold my-3 border-green-600 rounded text-green-600 flex justify-center items-center w-fit"
+        href="/hrm/newStaff"
+        className="flex items-center gap-2 p-2 border-2 font-semibold border-green-600 rounded text-green-600 mb-4"
       >
-        <span>
-          <FaRegUser />
-        </span>
-        +<p>add new Staff</p>
+        <FaRegUser />
+        <span>Add New Staff</span>
       </Link>
+
       {currentUser.isAdmin && staffs?.length > 0 ? (
         <>
-          <Table hoverable className="shadow-md text-center">
-            <Table.Head className="bg-slate-200 h-14">
-              <Table.HeadCell>STAFF NUMBER</Table.HeadCell>
-              <Table.HeadCell>NAME</Table.HeadCell>
-              <Table.HeadCell>EMAIL</Table.HeadCell>
-              <Table.HeadCell>ACTIONS</Table.HeadCell>
-            </Table.Head>
-
-            {staffs.map((staff) => (
-              <Table.Body className="divide-y" key={staff._id}>
-                <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800 h-14 border">
-                  <Table.Cell>{staff.numberStaff}</Table.Cell>
-                  <Table.Cell>{staff.nameStaff}</Table.Cell>
-                  <Table.Cell>{staff.emailStaff}</Table.Cell>
-                  <Table.Cell className="flex text-center justify-center items-center gap-3 my-3">
+          <table className="min-w-full bg-white text-center shadow-md rounded-lg">
+            <thead className="bg-slate-200 h-14">
+              <tr>
+                <th className="p-4">STAFF NUMBER</th>
+                <th className="p-4">NAME</th>
+                <th className="p-4">EMAIL</th>
+                <th className="p-4">ACTIONS</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y">
+              {staffs.map((staff) => (
+                <tr key={staff._id} className="border">
+                  <td className="p-4">{staff.numberStaff}</td>
+                  <td className="p-4">{staff.nameStaff}</td>
+                  <td className="p-4">{staff.emailStaff}</td>
+                  <td className="p-4 flex justify-center items-center gap-2">
                     <button
                       onClick={() => handleEditClick(staff._id)}
-                      className="font-medium flex justify-center items-center gap-2 rounded bg-green-600 hover:underline cursor-pointe p-2 bg-red-500 text-white"
+                      className="flex items-center gap-1 px-3 py-1 bg-green-600 text-white rounded"
                     >
-                      <span>
-                        <HiPencilAlt />
-                      </span>{" "}
-                      Updated
+                      <HiPencilAlt />
+                      Edit
                     </button>
-                    <div
+                    <button
                       onClick={() => {
                         setShowModal(true);
                         setStaffIdToDelete(staff._id);
                       }}
-                      className="font-medium flex justify-center items-center gap-2 rounded  bg-red-600 hover:underline cursor-pointe p-2 bg-red-500 text-white"
+                      className="flex items-center gap-1 px-3 py-1 bg-red-600 text-white rounded"
                     >
-                      <span>
-                        <FaTrash />
-                      </span>{" "}
+                      <FaTrash />
                       Delete
-                    </div>
-                  </Table.Cell>
-                </Table.Row>
-              </Table.Body>
-            ))}
-          </Table>
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
           {showMore && (
             <button
               onClick={handleShowMore}
-              className="w-full text-teal-500 self-center text-sm py-7"
+              className="mt-4 w-full text-teal-500 text-sm py-2"
             >
               Show more
             </button>
           )}
         </>
       ) : (
-        <p>You have no staffss yet!</p>
+        <p className="text-center">You have no staff yet!</p>
       )}
-      <Modal
-        show={showModal}
-        onClose={() => setShowModal(false)}
-        popup
-        size="md"
-      >
-        <Modal.Header />
-        <Modal.Body>
-          <div className="text-center">
-            <HiOutlineExclamationCircle className="h-14 w-14 text-gray-400 dark:text-gray-200 mb-4 mx-auto" />
-            <h3 className="mb-5 text-lg text-gray-500 dark:text-gray-400">
-              Are you sure you want to delete this staff?
-            </h3>
+
+      {showModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-md text-center">
+            <HiOutlineExclamationCircle className="mx-auto mb-4 text-4xl text-gray-500" />
+            <h3 className="text-lg mb-5">Are you sure you want to delete this staff?</h3>
             <div className="flex justify-center gap-4">
-              <Button color="failure" onClick={handleDeleteStaff}>
-                Yes, I'm sure
-              </Button>
-              <Button color="gray" onClick={() => setShowModal(false)}>
+              <button
+                onClick={handleDeleteStaff}
+                className="px-4 py-2 bg-red-500 text-white rounded-md"
+              >
+                Yes, I’m sure
+              </button>
+              <button
+                onClick={() => setShowModal(false)}
+                className="px-4 py-2 bg-gray-300 text-gray-800 rounded-md"
+              >
                 No, cancel
-              </Button>
+              </button>
             </div>
           </div>
-        </Modal.Body>
-      </Modal>
+        </div>
+      )}
     </div>
   );
 };

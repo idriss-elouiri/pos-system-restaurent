@@ -1,8 +1,6 @@
 "use client";
 
-import React from "react";
-import { Modal, Table, Button } from "flowbite-react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { HiOutlineExclamationCircle, HiPencilAlt } from "react-icons/hi";
 import { FaTrash, FaRegUser } from "react-icons/fa";
@@ -19,30 +17,28 @@ const Products = () => {
   const router = useRouter();
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const fetchProducts = async () => {
-        try {
-          const res = await fetch(`${apiUrl}/api/product/getProducts`, {
-            method: "GET",
-            credentials: "include",
-          });
-          const data = await res.json();
-          if (res.ok) {
-            setProducts(data.products);
-            if (data.products.length < 9) {
-              setShowMore(false);
-            }
-          } else {
-            console.log(data.message);
+    const fetchProducts = async () => {
+      try {
+        const res = await fetch(`${apiUrl}/api/product/getProducts`, {
+          method: "GET",
+          credentials: "include",
+        });
+        const data = await res.json();
+        if (res.ok) {
+          setProducts(data.products);
+          if (data.products.length < 9) {
+            setShowMore(false);
           }
-        } catch (error) {
-          console.log(error.message);
+        } else {
+          console.log(data.message);
         }
-      };
-      fetchProducts();
-    }
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
+    fetchProducts();
   }, [currentUser._id]);
-  console.log(products);
+
   const handleShowMore = async () => {
     const startIndex = products.length;
     try {
@@ -61,7 +57,7 @@ const Products = () => {
     }
   };
 
-  const handleDeleteproduct = async () => {
+  const handleDeleteProduct = async () => {
     try {
       const res = await fetch(
         `${apiUrl}/api/product/deleteproduct/${productIdToDelete}`,
@@ -82,108 +78,112 @@ const Products = () => {
       console.log(error.message);
     }
   };
+
   const handleEditClick = (id) => {
     router.push(`/products/${id}/editProduct`);
   };
-  return (
-    <div className="table-auto w-[90%] overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500">
-      <Link
-        href={"/products/newProduct"}
-        className="p-2 border-2 font-semibold my-3 border-green-600 rounded text-green-600 flex justify-center items-center w-fit"
-      >
-        <span>
-          <FaRegUser />
-        </span>
-        +<p>add new product</p>
-      </Link>
-      {currentUser.isAdmin && products?.length > 0 ? (
-        <>
-          <Table hoverable className="shadow-md text-center">
-            <Table.Head className="bg-slate-200 h-14">
-              <Table.HeadCell>IMAGE</Table.HeadCell>
-              <Table.HeadCell>PRODUCT CODE</Table.HeadCell>
-              <Table.HeadCell>NAME</Table.HeadCell>
-              <Table.HeadCell>PRICE</Table.HeadCell>
-              <Table.HeadCell>ACTIONS</Table.HeadCell>
-            </Table.Head>
 
-            {products.map((product) => (
-              <Table.Body className="divide-y" key={product._id}>
-                <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800 h-14 border">
-                  <Table.Cell>
-                    {" "}
-                    <img
-                      src={product.productImage}
-                      alt={product.productName}
-                      className="w-20 h-10 object-cover bg-gray-500"
-                    />
-                  </Table.Cell>
-                  <Table.Cell>{product.productCode}</Table.Cell>
-                  <Table.Cell>{product.productName}</Table.Cell>
-                  <Table.Cell>{product.productPrice}</Table.Cell>
-                  <Table.Cell className="flex text-center justify-center items-center gap-3 my-3">
-                    <button
-                      onClick={() => handleEditClick(product._id)}
-                      className="font-medium flex justify-center items-center gap-2 rounded bg-green-600 hover:underline cursor-pointe p-2 bg-red-500 text-white"
-                    >
-                      <span>
-                        <HiPencilAlt />
-                      </span>{" "}
-                      Updated
-                    </button>
-                    <div
-                      onClick={() => {
-                        setShowModal(true);
-                        setProductIdToDelete(product._id);
-                      }}
-                      className="font-medium flex justify-center items-center gap-2 rounded  bg-red-600 hover:underline cursor-pointe p-2 bg-red-500 text-white"
-                    >
-                      <span>
-                        <FaTrash />
-                      </span>{" "}
-                      Delete
-                    </div>
-                  </Table.Cell>
-                </Table.Row>
-              </Table.Body>
-            ))}
-          </Table>
+  return (
+    <div className="p-4 sm:p-8 w-full max-w-4xl mx-auto">
+      <Link
+        href="/products/newProduct"
+        className="mb-4 inline-flex items-center px-4 py-2 border border-green-500 text-green-500 rounded-md hover:bg-green-500 hover:text-white"
+      >
+        <FaRegUser className="mr-2" />
+        Add New Product
+      </Link>
+
+      {currentUser.isAdmin && products.length > 0 ? (
+        <>
+          <div className="overflow-auto">
+            <table className="min-w-full text-sm bg-white border border-gray-200 shadow rounded-lg">
+              <thead className="bg-gray-100">
+                <tr>
+                  <th className="px-4 py-2 text-left">Image</th>
+                  <th className="px-4 py-2 text-left">Product Code</th>
+                  <th className="px-4 py-2 text-left">Name</th>
+                  <th className="px-4 py-2 text-left">Price</th>
+                  <th className="px-4 py-2 text-center">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {products.map((product) => (
+                  <tr
+                    key={product._id}
+                    className="border-t border-gray-200 hover:bg-gray-50"
+                  >
+                    <td className="px-4 py-3">
+                      <img
+                        src={product.productImage}
+                        alt={product.productName}
+                        className="w-20 h-12 object-cover bg-gray-200 rounded-md"
+                      />
+                    </td>
+                    <td className="px-4 py-3">{product.productCode}</td>
+                    <td className="px-4 py-3">{product.productName}</td>
+                    <td className="px-4 py-3">{product.productPrice}</td>
+                    <td className="px-4 py-3 flex justify-center gap-2">
+                      <button
+                        onClick={() => handleEditClick(product._id)}
+                        className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded flex items-center"
+                      >
+                        <HiPencilAlt className="mr-1" />
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => {
+                          setShowModal(true);
+                          setProductIdToDelete(product._id);
+                        }}
+                        className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded flex items-center"
+                      >
+                        <FaTrash className="mr-1" />
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
           {showMore && (
             <button
               onClick={handleShowMore}
-              className="w-full text-teal-500 self-center text-sm py-7"
+              className="mt-4 w-full py-2 text-teal-500"
             >
               Show more
             </button>
           )}
         </>
       ) : (
-        <p>You have no Productss yet!</p>
+        <p>No products available!</p>
       )}
-      <Modal
-        show={showModal}
-        onClose={() => setShowModal(false)}
-        popup
-        size="md"
-      >
-        <Modal.Header />
-        <Modal.Body>
-          <div className="text-center">
-            <HiOutlineExclamationCircle className="h-14 w-14 text-gray-400 dark:text-gray-200 mb-4 mx-auto" />
-            <h3 className="mb-5 text-lg text-gray-500 dark:text-gray-400">
+
+      {/* Modal */}
+      {showModal && (
+        <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-md p-6 max-w-md w-full">
+            <HiOutlineExclamationCircle className="w-12 h-12 text-yellow-500 mx-auto mb-4" />
+            <h3 className="text-lg text-center text-gray-700">
               Are you sure you want to delete this product?
             </h3>
-            <div className="flex justify-center gap-4">
-              <Button color="failure" onClick={handleDeleteproduct}>
+            <div className="mt-6 flex justify-center gap-4">
+              <button
+                onClick={handleDeleteProduct}
+                className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+              >
                 Yes, I'm sure
-              </Button>
-              <Button color="gray" onClick={() => setShowModal(false)}>
+              </button>
+              <button
+                onClick={() => setShowModal(false)}
+                className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400"
+              >
                 No, cancel
-              </Button>
+              </button>
             </div>
           </div>
-        </Modal.Body>
-      </Modal>
+        </div>
+      )}
     </div>
   );
 };

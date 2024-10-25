@@ -11,10 +11,9 @@ const FormRegisterCustomer = ({
   passwordCustomer: existingPassword,
   isCustomer: existingIsCustomer,
 }) => {
-
   const [errorMessage, setErrorMessage] = useState(null);
   const [loading, setLoading] = useState(false);
-  const router = useRouter(); 
+  const router = useRouter();
   const [formData, setFormData] = useState({
     nameCustomer: existingName || '',
     emailCustomer: existingEmail || '',
@@ -23,11 +22,9 @@ const FormRegisterCustomer = ({
     isCustomer: existingIsCustomer || false, 
   });
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-  console.log(formData)
 
   const handleInputChange = (e) => {
-    const { id, value, checked } = e.target; 
-
+    const { id, value, checked } = e.target;
     setFormData((prev) => ({
       ...prev,
       [id]: id === "isCustomer" ? checked : value,
@@ -42,49 +39,48 @@ const FormRegisterCustomer = ({
       ? `${apiUrl}/api/customer/updateCustomer/${_id}` 
       : `${apiUrl}/api/customer/registerCustomer`;
 
-    const res = await fetch(url, {
-      method: _id ? "PUT" : "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
-    });
+    try {
+      const res = await fetch(url, {
+        method: _id ? "PUT" : "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
 
-    const data = await res.json();
-    
-    if (!res.ok) {
-      setErrorMessage(data.message || 'An error occurred');
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'An error occurred');
+      router.push("/customers");
+    } catch (error) {
+      setErrorMessage(error.message);
+    } finally {
       setLoading(false);
-      return;
     }
-    router.push("/customers"); 
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-md p-8 space-y-6 bg-white shadow-md rounded-md">
-        <h2 className="text-2xl font-bold text-center">{_id ? "Edit Customer" : "Register Customer"}</h2>
+    <div className="flex items-center justify-center min-h-screen bg-gray-50 px-4">
+      <div className="w-full max-w-lg p-8 space-y-6 bg-white shadow-lg rounded-lg">
+        <h2 className="text-2xl font-bold text-center text-gray-800">
+          {_id ? "Edit Customer" : "Register Customer"}
+        </h2>
         <form className="space-y-4" onSubmit={handleSubmit}>
-          {/* Number Field */}
-          <div>
-            <label
-              htmlFor="number"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Customer Number Phone
+          {/* Phone Number Field */}
+          <div className="flex flex-col">
+            <label htmlFor="phoneNumberCustomer" className="text-sm font-medium text-gray-700">
+              Customer Phone Number
             </label>
             <input
               type="text"
               id="phoneNumberCustomer"
               value={formData.phoneNumberCustomer}
               onChange={handleInputChange}
-              className="w-full p-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              className="p-3 mt-1 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              placeholder="e.g., 123-456-7890"
             />
           </div>
+
           {/* Name Field */}
-          <div>
-            <label
-              htmlFor="name"
-              className="block text-sm font-medium text-gray-700"
-            >
+          <div className="flex flex-col">
+            <label htmlFor="nameCustomer" className="text-sm font-medium text-gray-700">
               Customer Name
             </label>
             <input
@@ -92,16 +88,14 @@ const FormRegisterCustomer = ({
               id="nameCustomer"
               value={formData.nameCustomer}
               onChange={handleInputChange}
-              className="w-full p-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              className="p-3 mt-1 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              placeholder="e.g., John Doe"
             />
           </div>
 
           {/* Email Field */}
-          <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-gray-700"
-            >
+          <div className="flex flex-col">
+            <label htmlFor="emailCustomer" className="text-sm font-medium text-gray-700">
               Customer Email
             </label>
             <input
@@ -109,53 +103,52 @@ const FormRegisterCustomer = ({
               id="emailCustomer"
               value={formData.emailCustomer}
               onChange={handleInputChange}
-              className="w-full p-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              className="p-3 mt-1 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              placeholder="e.g., johndoe@example.com"
             />
           </div>
 
           {/* Password Field */}
-          <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-gray-700"
-            >
+          <div className="flex flex-col">
+            <label htmlFor="passwordCustomer" className="text-sm font-medium text-gray-700">
               Customer Password
             </label>
             <input
               type="password"
               id="passwordCustomer"
+              value={formData.passwordCustomer}
               onChange={handleInputChange}
-              className="w-full p-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              className="p-3 mt-1 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              placeholder="Enter a secure password"
             />
           </div>
 
           {/* Checkbox Field */}
-          <div>
-            <label>
-              <input
-                id="isCustomer"
-                type="checkbox"
-                checked={formData.isCustomer}
-                onChange={handleInputChange}
-              />
+          <div className="flex items-center space-x-2">
+            <input
+              type="checkbox"
+              id="isCustomer"
+              checked={formData.isCustomer}
+              onChange={handleInputChange}
+              className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+            />
+            <label htmlFor="isCustomer" className="text-sm text-gray-700">
               Is Customer
             </label>
           </div>
 
           {/* Submit Button */}
-          <div>
-            <button
-              type="submit"
-              className="w-full px-4 py-2 text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              disabled={loading}
-            >
-              {_id ? "Edit Customer" : "Add Customer"}
-            </button>
-          </div>
+          <button
+            type="submit"
+            className="w-full py-3 mt-6 text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            disabled={loading}
+          >
+            {loading ? "Processing..." : _id ? "Edit Customer" : "Add Customer"}
+          </button>
 
           {/* Error Message */}
           {errorMessage && (
-            <p className="mt-2 text-sm text-red-600" id="username-error">
+            <p className="mt-2 text-sm text-center text-red-600">
               {errorMessage}
             </p>
           )}

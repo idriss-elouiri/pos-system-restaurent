@@ -1,15 +1,13 @@
 "use client";
 
-import React from "react";
-import { Modal, Table, Button } from "flowbite-react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { HiOutlineExclamationCircle, HiPencilAlt } from "react-icons/hi";
 import { FaTrash, FaRegUser } from "react-icons/fa";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-const Hrm = () => {
+const CustomerComp = () => {
   const { currentUser } = useSelector((state) => state.user);
   const [customers, setCustomers] = useState([]);
   const [showMore, setShowMore] = useState(true);
@@ -19,165 +17,141 @@ const Hrm = () => {
   const router = useRouter();
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const fetchcustomers = async () => {
-        try {
-          const res = await fetch(`${apiUrl}/api/customer/getCustomers`, {
-            method: "GET",
-            credentials: "include",
-          });
-          const data = await res.json();
-          if (res.ok) {
-            setCustomers(data.customers);
-            if (data.customers.length < 9) {
-              setShowMore(false);
-            }
-          } else {
-            console.log(data.message);
-          }
-        } catch (error) {
-          console.log(error.message);
+    const fetchCustomers = async () => {
+      try {
+        const res = await fetch(`${apiUrl}/api/customer/getCustomers`, {
+          method: "GET",
+          credentials: "include",
+        });
+        const data = await res.json();
+        if (res.ok) {
+          setCustomers(data.customers);
+          if (data.customers.length < 9) setShowMore(false);
         }
-      };
-      fetchcustomers();
-    }
+      } catch (error) {
+        console.error(error.message);
+      }
+    };
+    fetchCustomers();
   }, [currentUser._id]);
 
-  console.log(customers);
   const handleShowMore = async () => {
     const startIndex = customers.length;
     try {
-      const res = await fetch(
-        `${apiUrl}/api/customer/getCustomer?startIndex=${startIndex}`
-      );
+      const res = await fetch(`${apiUrl}/api/customer/getCustomer?startIndex=${startIndex}`);
       const data = await res.json();
       if (res.ok) {
         setCustomers((prev) => [...prev, ...data.customers]);
-        if (data.customers.length < 9) {
-          setShowMore(false);
-        }
+        if (data.customers.length < 9) setShowMore(false);
       }
     } catch (error) {
-      console.log(error.message);
+      console.error(error.message);
     }
   };
 
   const handleDeleteCustomer = async () => {
     try {
-      const res = await fetch(
-        `${apiUrl}/api/customer/deleteCustomer/${customerIdToDelete}`,
-        {
-          method: "DELETE",
-        }
-      );
+      const res = await fetch(`${apiUrl}/api/customer/deleteCustomer/${customerIdToDelete}`, {
+        method: "DELETE",
+      });
       const data = await res.json();
       if (res.ok) {
-        setCustomers((prev) =>
-          prev.filter((Customer) => Customer._id !== customerIdToDelete)
-        );
+        setCustomers((prev) => prev.filter((customer) => customer._id !== customerIdToDelete));
         setShowModal(false);
-      } else {
-        console.log(data.message);
       }
     } catch (error) {
-      console.log(error.message);
+      console.error(error.message);
     }
   };
+
   const handleEditClick = (id) => {
     router.push(`/customers/${id}/editCustomer`);
   };
-  return (
-    <div className="table-auto w-[90%] overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500">
-      <Link
-        href={"/customers/newCustomer"}
-        className="p-2 border-2 font-semibold my-3 border-green-600 rounded text-green-600 flex justify-center items-center w-fit"
-      >
-        <span>
-          <FaRegUser />
-        </span>
-        +<p>add new Customer</p>
-      </Link>
-      {currentUser.isAdmin && customers?.length > 0 ? (
-        <>
-          <Table hoverable className="shadow-md text-center">
-            <Table.Head className="bg-slate-200 h-14">
-              <Table.HeadCell>NAME</Table.HeadCell>
-              <Table.HeadCell>CUSTOMER PHONE NUMBER</Table.HeadCell>
-              <Table.HeadCell>EMAIL</Table.HeadCell>
-              <Table.HeadCell>ACTIONS</Table.HeadCell>
-            </Table.Head>
 
-            {customers.map((customer) => (
-              <Table.Body className="divide-y" key={customer._id}>
-                <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800 h-14 border">
-                  <Table.Cell>{customer.nameCustomer}</Table.Cell>
-                  <Table.Cell>{customer.phoneNumberCustomer}</Table.Cell>
-                  <Table.Cell>{customer.emailCustomer}</Table.Cell>
-                  <Table.Cell className="flex text-center justify-center items-center gap-3 my-3">
-                    <button
-                      onClick={() => handleEditClick(customer._id)}
-                      className="font-medium flex justify-center items-center gap-2 rounded bg-green-600 hover:underline cursor-pointe p-2 bg-red-500 text-white"
-                    >
-                      <span>
-                        <HiPencilAlt />
-                      </span>{" "}
-                      Updated
-                    </button>
-                    <div
-                      onClick={() => {
-                        setShowModal(true);
-                        setCustomerIdToDelete(staff._id);
-                      }}
-                      className="font-medium flex justify-center items-center gap-2 rounded  bg-red-600 hover:underline cursor-pointe p-2 bg-red-500 text-white"
-                    >
-                      <span>
-                        <FaTrash />
-                      </span>{" "}
-                      Delete
-                    </div>
-                  </Table.Cell>
-                </Table.Row>
-              </Table.Body>
-            ))}
-          </Table>
+  return (
+    <div className="w-full px-4 md:px-10 lg:px-20 py-8 bg-gray-50">
+      <Link href="/customers/newCustomer" className="mb-6 inline-flex items-center px-4 py-2 text-green-600 border border-green-600 rounded-lg font-semibold hover:bg-green-50">
+        <FaRegUser className="mr-2" /> + Add New Customer
+      </Link>
+
+      {currentUser.isAdmin && customers.length > 0 ? (
+        <>
+          <div className="overflow-x-auto">
+            <table className="min-w-full border bg-white shadow-md rounded-lg text-center">
+              <thead className="bg-gray-200">
+                <tr>
+                  <th className="px-4 py-2">NAME</th>
+                  <th className="px-4 py-2">CUSTOMER PHONE NUMBER</th>
+                  <th className="px-4 py-2">EMAIL</th>
+                  <th className="px-4 py-2">ACTIONS</th>
+                </tr>
+              </thead>
+              <tbody>
+                {customers.map((customer) => (
+                  <tr key={customer._id} className="border-b last:border-none">
+                    <td className="px-4 py-3">{customer.nameCustomer}</td>
+                    <td className="px-4 py-3">{customer.phoneNumberCustomer}</td>
+                    <td className="px-4 py-3">{customer.emailCustomer}</td>
+                    <td className="px-4 py-3 flex justify-center space-x-2">
+                      <button
+                        onClick={() => handleEditClick(customer._id)}
+                        className="flex items-center space-x-1 px-3 py-1 bg-green-500 text-white rounded-lg hover:bg-green-600"
+                      >
+                        <HiPencilAlt /> <span>Edit</span>
+                      </button>
+                      <button
+                        onClick={() => {
+                          setShowModal(true);
+                          setCustomerIdToDelete(customer._id);
+                        }}
+                        className="flex items-center space-x-1 px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600"
+                      >
+                        <FaTrash /> <span>Delete</span>
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
           {showMore && (
             <button
               onClick={handleShowMore}
-              className="w-full text-teal-500 self-center text-sm py-7"
+              className="mt-6 w-full text-teal-500 text-sm"
             >
               Show more
             </button>
           )}
         </>
       ) : (
-        <p>You have no customerss yet!</p>
+        <p className="text-gray-500 text-center mt-4">You have no customers yet!</p>
       )}
-      <Modal
-        show={showModal}
-        onClose={() => setShowModal(false)}
-        popup
-        size="md"
-      >
-        <Modal.Header />
-        <Modal.Body>
-          <div className="text-center">
-            <HiOutlineExclamationCircle className="h-14 w-14 text-gray-400 dark:text-gray-200 mb-4 mx-auto" />
-            <h3 className="mb-5 text-lg text-gray-500 dark:text-gray-400">
-              Are you sure you want to delete this staff?
-            </h3>
-            <div className="flex justify-center gap-4">
-              <Button color="failure" onClick={handleDeleteCustomer}>
+
+      {showModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-3/4 max-w-md text-center">
+            <HiOutlineExclamationCircle className="w-14 h-14 mx-auto text-gray-400 mb-4" />
+            <h3 className="mb-5 text-lg text-gray-600">Are you sure you want to delete this customer?</h3>
+            <div className="flex justify-center space-x-4">
+              <button
+                onClick={handleDeleteCustomer}
+                className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+              >
                 Yes, I'm sure
-              </Button>
-              <Button color="gray" onClick={() => setShowModal(false)}>
+              </button>
+              <button
+                onClick={() => setShowModal(false)}
+                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
+              >
                 No, cancel
-              </Button>
+              </button>
             </div>
           </div>
-        </Modal.Body>
-      </Modal>
+        </div>
+      )}
     </div>
   );
 };
 
-export default Hrm;
+export default CustomerComp;
