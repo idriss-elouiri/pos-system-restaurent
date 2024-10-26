@@ -13,6 +13,8 @@ const CustomerComp = () => {
   const [showMore, setShowMore] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [customerIdToDelete, setCustomerIdToDelete] = useState("");
+  const isAdmin = currentUser?.isAdmin;
+  const isStaff = currentUser?.isStaff;
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   const router = useRouter();
 
@@ -95,7 +97,7 @@ const CustomerComp = () => {
         )}
       </div>
 
-      {currentUser.isAdmin && customers.length > 0 ? (
+      {(isAdmin || isStaff) ? (
         <>
           <div className="overflow-x-auto">
             <table className="min-w-full border bg-white shadow-md rounded-lg text-center">

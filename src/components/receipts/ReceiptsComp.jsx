@@ -2,8 +2,13 @@
 
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 const ReceiptComp = () => {
+  const { currentUser } = useSelector((state) => state.user);
+  const isAdmin = currentUser?.isAdmin;
+  const isStaff = currentUser?.isStaff;
+
   const [orders, setOrders] = useState([]);
   const [showMore, setShowMore] = useState(true);
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -63,52 +68,56 @@ const ReceiptComp = () => {
         )}
       </div>
       <div className="overflow-x-auto">
-        <table className="w-full text-left">
-          <thead>
-            <tr className="bg-gray-100">
-              <th className="py-2 px-4">Code</th>
-              <th className="py-2 px-4">Customer</th>
-              <th className="py-2 px-4">Product</th>
-              <th className="py-2 px-4">Price</th>
-              <th className="py-2 px-4">Qty</th>
-              <th className="py-2 px-4">Total</th>
-              <th className="py-2 px-4">Status</th>
-              <th className="py-2 px-4">Date</th>
-              <th className="py-2 px-4">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {orders.map((order) => (
-              <tr key={order._id}>
-                <td className="py-2 px-4">{order.orderCode}</td>
-                <td className="py-2 px-4">{order.customerName}</td>
-                <td className="py-2 px-4">{order.productName}</td>
-                <td className="py-2 px-4">${order.productPrice}</td>
-                <td className="py-2 px-4">{order.productQty}</td>
-                <td className="py-2 px-4">${order.productPrice}</td>
-                <td className="py-2 px-4">
-                  {order.isPaid ? (
-                    <span className="p-2 rounded bg-green-500 text-white">
-                      Paid
-                    </span>
-                  ) : (
-                    <span className="p-2 rounded bg-red-500 text-white">
-                      Not Paid
-                    </span>
-                  )}
-                </td>
-                <td className="py-2 px-4">{order.createdAt}</td>
-                <td>
-                  <Link href={`/receipts/${order._id}/print`}>
-                    <button className="px-6 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 focus:outline-none focus:ring focus:ring-indigo-300">
-                    Print Receipt
-                    </button>
-                  </Link>
-                </td>
+        {isAdmin || isStaff  ? (
+          <table className="w-full text-left">
+            <thead>
+              <tr className="bg-gray-100">
+                <th className="py-2 px-4">Code</th>
+                <th className="py-2 px-4">Customer</th>
+                <th className="py-2 px-4">Product</th>
+                <th className="py-2 px-4">Price</th>
+                <th className="py-2 px-4">Qty</th>
+                <th className="py-2 px-4">Total</th>
+                <th className="py-2 px-4">Status</th>
+                <th className="py-2 px-4">Date</th>
+                <th className="py-2 px-4">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {orders.map((order) => (
+                <tr key={order._id}>
+                  <td className="py-2 px-4">{order.orderCode}</td>
+                  <td className="py-2 px-4">{order.customerName}</td>
+                  <td className="py-2 px-4">{order.productName}</td>
+                  <td className="py-2 px-4">${order.productPrice}</td>
+                  <td className="py-2 px-4">{order.productQty}</td>
+                  <td className="py-2 px-4">${order.productPrice}</td>
+                  <td className="py-2 px-4">
+                    {order.isPaid ? (
+                      <span className="p-2 rounded bg-green-500 text-white">
+                        Paid
+                      </span>
+                    ) : (
+                      <span className="p-2 rounded bg-red-500 text-white">
+                        Not Paid
+                      </span>
+                    )}
+                  </td>
+                  <td className="py-2 px-4">{order.createdAt}</td>
+                  <td>
+                    <Link href={`/receipts/${order._id}/print`}>
+                      <button className="px-6 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 focus:outline-none focus:ring focus:ring-indigo-300">
+                        Print Receipt
+                      </button>
+                    </Link>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <p>You have no orders yet!</p>
+        )}
       </div>
     </section>
   );

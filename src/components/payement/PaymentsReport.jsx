@@ -1,11 +1,15 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 const PaymentsReport = () => {
   const [payments, setPayments] = useState([]);
   const [showMore, setShowMore] = useState(true);
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  const { currentUser } = useSelector((state) => state.user);
+  const isAdmin = currentUser?.isAdmin;
+  const isStaff = currentUser?.isStaff;
 
   useEffect(() => {
     const fetchpayements = async () => {
@@ -62,28 +66,30 @@ const PaymentsReport = () => {
         )}
       </div>
       <div className="overflow-x-auto">
-        <table className="w-full text-left">
-          <thead>
-            <tr className="bg-gray-100">
-              <th className="py-2 px-4">Payment Code</th>
-              <th className="py-2 px-4">Payment Method</th>
-              <th className="py-2 px-4">Order Code</th>
-              <th className="py-2 px-4">Amount</th>
-              <th className="py-2 px-4">Date Paid</th>
-            </tr>
-          </thead>
-          <tbody>
-            {payments?.map((payment) => (
-              <tr key={payment._id}>
-                <td className="py-2 px-4">{payment.paymentCode}</td>
-                <td className="py-2 px-4">{payment.paymentMethod}</td>
-                <td className="py-2 px-4">{payment.orderCode}</td>
-                <td className="py-2 px-4">${payment.amount}</td>
-                <td className="py-2 px-4">{payment.createdAt}</td>
+        {(isAdmin || isStaff) && (
+          <table className="w-full text-left">
+            <thead>
+              <tr className="bg-gray-100">
+                <th className="py-2 px-4">Payment Code</th>
+                <th className="py-2 px-4">Payment Method</th>
+                <th className="py-2 px-4">Order Code</th>
+                <th className="py-2 px-4">Amount</th>
+                <th className="py-2 px-4">Date Paid</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {payments?.map((payment) => (
+                <tr key={payment._id}>
+                  <td className="py-2 px-4">{payment.paymentCode}</td>
+                  <td className="py-2 px-4">{payment.paymentMethod}</td>
+                  <td className="py-2 px-4">{payment.orderCode}</td>
+                  <td className="py-2 px-4">${payment.amount}</td>
+                  <td className="py-2 px-4">{payment.createdAt}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
     </section>
   );

@@ -1,3 +1,5 @@
+"use client"
+
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -8,13 +10,13 @@ import {
   signInFailure,
 } from "../../redux/user/userSlice";
 
-export default function Login() {
-  const [formData, setFormData] = useState({ email: "", password: "" });
+export default function StaffLogin() {
+  const [formData, setFormData] = useState({ emailStaff: "", passwordStaff: "" });
   const { loading, error: errorMessage } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const router = useRouter();
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-console.log(errorMessage)
+  
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
@@ -24,7 +26,7 @@ console.log(errorMessage)
     e.preventDefault();
     dispatch(signInStart());
     try {
-      const res = await fetch(`${apiUrl}/api/auth/login`, {
+      const res = await fetch(`${apiUrl}/api/hrm/loginStaff`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -59,8 +61,8 @@ console.log(errorMessage)
             </label>
             <input
               type="email"
-              id="email"
-              name="email"
+              id="emailStaff"
+              name="emailStaff"
               value={formData.email}
               onChange={handleInputChange}
               className="w-full p-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
@@ -75,8 +77,8 @@ console.log(errorMessage)
             </label>
             <input
               type="password"
-              id="password"
-              name="password"
+              id="passwordStaff"
+              name="passwordStaff"
               value={formData.password}
               onChange={handleInputChange}
               className="w-full p-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"

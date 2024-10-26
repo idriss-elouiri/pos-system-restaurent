@@ -10,6 +10,9 @@ const Orders = () => {
   const { currentUser } = useSelector((state) => state.user);
   const [products, setProducts] = useState([]);
   const [showMore, setShowMore] = useState(true);
+  const isAdmin = currentUser?.isAdmin;
+  const isStaff = currentUser?.isStaff;
+  const isCustomer = currentUser?.isCustomer;
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   const router = useRouter();
 
@@ -60,7 +63,7 @@ const Orders = () => {
 
   return (
     <div className="w-full p-3 max-w-4xl mx-auto overflow-x-auto">
-      {currentUser.isAdmin && products.length > 0 ? (
+        {(isAdmin || isStaff || isCustomer) ? (
         <>
           <table className="w-full border-collapse shadow-lg text-center">
             <thead className="bg-gray-200">

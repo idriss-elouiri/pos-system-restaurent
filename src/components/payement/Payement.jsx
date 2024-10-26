@@ -14,6 +14,9 @@ const Payement = () => {
     const [showModal, setShowModal] = useState(false);
     const [orderIdToDelete, setOrderIdToDelete] = useState("");
     const [orderDate, setOrderDate] = useState("");
+    const isAdmin = currentUser?.isAdmin;
+    const isStaff = currentUser?.isStaff;
+    const isCustomer = currentUser?.isCustomer;
     const router = useRouter();
     const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
@@ -93,7 +96,7 @@ const Payement = () => {
             >
                 +<p>Add New Order</p>
             </Link>
-            {currentUser.isAdmin && orders?.length > 0 ? (
+            {(isAdmin || isStaff || isCustomer) ? (
                 <>
                     <table className="min-w-full border-collapse bg-white shadow-md rounded-lg overflow-hidden">
                         <thead className="bg-gray-200">

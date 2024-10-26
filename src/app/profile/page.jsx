@@ -1,11 +1,10 @@
-import Layout from '@/components/Layout'
 import ProfileComp from '@/components/profile/ProfileComp'
 import React from 'react'
 
-const profile = () => {
+const Profile = () => {
   return (
-    <Layout><ProfileComp/></Layout>
+    <ProfileComp/>
   )
 }
 
-export default profile
+export default Profile

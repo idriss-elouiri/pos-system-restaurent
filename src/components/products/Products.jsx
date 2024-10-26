@@ -13,6 +13,9 @@ const Products = () => {
   const [showMore, setShowMore] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [productIdToDelete, setProductIdToDelete] = useState("");
+  const isAdmin = currentUser?.isAdmin;
+  const isStaff = currentUser?.isStaff;
+  const isCustomer = currentUser?.isCustomer;
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   const router = useRouter();
 
@@ -93,7 +96,7 @@ const Products = () => {
         Add New Product
       </Link>
 
-      {currentUser.isAdmin && products.length > 0 ? (
+      {(isAdmin || isStaff ) ? (
         <>
           <div className="overflow-auto">
             <table className="min-w-full text-sm bg-white border border-gray-200 shadow rounded-lg">
