@@ -15,6 +15,10 @@ const Sidebar = () => {
         <Link href="/orders" className="block">Orders</Link>
         <Link href="/payements" className="block">Payments</Link>
         <Link href="/receipts" className="block">Receipts</Link>
+        <hr/>
+        <h2 className="text-xl font-semibold mb-8 text-slate-300">Reporting</h2>
+        <Link href="/orders/ordersReport" className="block">Orders</Link>
+        <Link href="/payements/paymentsReport" className="block">Payments</Link>
       </nav>
     </aside>
   );

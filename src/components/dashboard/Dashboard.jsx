@@ -14,6 +14,8 @@ const Dashboard = () => {
   const [sales, setSales] = useState(0);
   const [orders, setOrders] = useState([]);
   const [payments, setPayments] = useState([]);
+  const [showMoreOrders, setShowMoreOrders] = useState(true);
+  const [showMorePayments, setShowMorePayments] = useState(true);
   const { currentUser } = useSelector((state) => state.user);
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
@@ -54,9 +56,14 @@ const Dashboard = () => {
         });
         const data = await res.json();
         if (res.ok) {
-          setTotalOrders(data.totalorders);
-          setOrders(data.orders);
-        }
+            setOrders(data.orders);
+            setTotalOrders(data.totalorders);
+            if (data.orders.length < 9) {
+              setShowMoreOrders(false);
+            }
+          } else {
+            console.log(data.message);
+          }
       } catch (error) {
         console.log(error.message);
       }
@@ -69,8 +76,13 @@ const Dashboard = () => {
         });
         const data = await res.json();
         if (res.ok) {
-          setPayments(data);
-        }
+            setPayments(data.payements);
+            if (data.payements.length < 9) {
+              setShowMorePayments(false);
+            }
+          } else {
+            console.log(data.message);
+          }
       } catch (error) {
         console.log(error.message);
       }
@@ -80,11 +92,48 @@ const Dashboard = () => {
     fetchorders();
     fetchpayements();
   }, [currentUser._id]);
+
+  const handleShowMoreOrders = async () => {
+    const startIndex = orders.length;
+    try {
+      const res = await fetch(
+        `${apiUrl}/api/order/getorders?startIndex=${startIndex}`
+      );
+      const data = await res.json();
+      if (res.ok) {
+        setOrders((prev) => [...prev, ...data.orders]);
+        setOrders((prev) => [...prev, ...data.orders]);
+        if (data.orders.length < 9) {
+          setShowMoreOrders(false);
+        }
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+  const handleShowMorePayements = async () => {
+    const startIndex = payments.length;
+    try {
+      const res = await fetch(
+        `${apiUrl}/api/payments/get?startIndex=${startIndex}`
+      );
+      const data = await res.json();
+      if (res.ok) {
+        setPayments((prev) => [...prev, ...data.payements]);
+        setPayments((prev) => [...prev, ...data.payements]);
+        if (data.orders.length < 9) {
+          setShowMorePayments(false);
+        }
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
   return (
     <main className="p-6 space-y-6 bg-gray-100">
       <HeroSection totalCustomers={totalCustomers} totalOrders={totalOrders} totalProducts={totalProducts}  />
-      <RecentOrders orders={orders} />
-      <RecentPayments payments={payments} />
+      <RecentOrders orders={orders} handleShowMore={handleShowMoreOrders} showMore={showMoreOrders} />
+      <RecentPayments payments={payments} handleShowMore={handleShowMorePayements} showMore={showMorePayments}  />
     </main>
   );
 };

@@ -1,11 +1,21 @@
 // components/RecentOrders.js
 
-import React from 'react';
+import React from "react";
 
-const RecentOrders = ({ orders }) => {
+const RecentOrders = ({ orders, handleShowMore, showMore }) => {
   return (
     <section className="my-6 bg-white p-4 rounded-lg shadow-lg">
-      <h2 className="text-xl font-semibold mb-4">Recent Orders</h2>
+      <div className="flex justify-between items-center w-full h-full">
+        <h2 className="text-xl font-semibold mb-4">Recent Orders</h2>
+        {showMore && (
+          <button
+            onClick={handleShowMore}
+            className="bg-indigo-600 text-white px-4 py-2 rounded"
+          >
+            See All Orders
+          </button>
+        )}
+      </div>
       <div className="overflow-x-auto">
         <table className="w-full text-left">
           <thead>
@@ -29,14 +39,13 @@ const RecentOrders = ({ orders }) => {
                 <td className="py-2 px-4">${order.productPrice}</td>
                 <td className="py-2 px-4">{order.productQty}</td>
                 <td className="py-2 px-4">${order.productPrice}</td>
-                <td className="py-2 px-4">{order.isPaid}</td>
-                <td className="py-2 px-4">{order.lastMonthorders}</td>
+                <td className="py-2 px-4">{order.isPaid ? <span className="p-2 rounded bg-green-500 text-white">Paid</span> : <span className="p-2 rounded bg-red-500 text-white">Not Paid</span>}</td>
+                <td className="py-2 px-4">{order.createdAt}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-      <button className="mt-4 bg-indigo-600 text-white px-4 py-2 rounded">See All Orders</button>
     </section>
   );
 };
