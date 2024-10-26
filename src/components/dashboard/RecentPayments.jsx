@@ -27,7 +27,7 @@ const RecentPayments = ({ payments, handleShowMore, showMore }) => {
             </tr>
           </thead>
           <tbody>
-            {payments.map((payment) => (
+            {payments?.map((payment) => (
               <tr key={payment._id}>
                 <td className="py-2 px-4">{payment.paymentCode}</td>
                 <td className="py-2 px-4">${payment.amount}</td>

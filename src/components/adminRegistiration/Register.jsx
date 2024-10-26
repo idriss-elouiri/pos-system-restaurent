@@ -10,52 +10,53 @@ export default function Register() {
   });
   const [errorMessage, setErrorMessage] = useState(null);
   const [loading, setLoading] = useState(false);
-  const navigate = useRouter();
+  const router = useRouter();
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const setLoadingState = (isLoading, errorMessage = null) => {
+    setLoading(isLoading);
+    setErrorMessage(errorMessage);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoadingState(true);
+
     try {
-      setLoading(true);
-      setErrorMessage(null);
       const res = await fetch(`${apiUrl}/api/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
       const data = await res.json();
+
       if (data.success === false) {
-         setErrorMessage(data.message);
-         setLoading(false);
+        // Set error message based on server response
+        setLoadingState(false, data.message || "Registration failed");
+        return;
       }
-      if (res.ok) {
-        navigate.push("/adminLogin");
-        setErrorMessage(null);
-        setLoading(false);
-      }
+
+      // Redirect upon successful registration
+      setLoadingState(false);
     } catch (error) {
-      setErrorMessage(error.message);
-      setLoading(false);
+      setLoadingState(false, error.message || "An unexpected error occurred");
     }
   };
-  console.log(formData);
+console.log(errorMessage)
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md p-8 space-y-6 bg-white shadow-md rounded-md">
         <h2 className="text-2xl font-bold text-center">Register</h2>
         <form className="space-y-4" onSubmit={handleSubmit}>
-          {/* Username Field */}
+          {/* Name Field */}
           <div>
-            <label
-              htmlFor="username"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Username
+            <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+              Name
             </label>
             <input
               type="text"
@@ -70,10 +71,7 @@ export default function Register() {
 
           {/* Email Field */}
           <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-gray-700"
-            >
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
               Email
             </label>
             <input
@@ -89,10 +87,7 @@ export default function Register() {
 
           {/* Password Field */}
           <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-gray-700"
-            >
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
               Password
             </label>
             <input
@@ -105,9 +100,11 @@ export default function Register() {
               placeholder="Enter your password"
             />
           </div>
-          <Link href="/login" className="my-1">
+
+          <Link href="/adminLogin" className="my-1">
             I have an account
           </Link>
+
           {/* Submit Button */}
           <div>
             <button
@@ -115,10 +112,10 @@ export default function Register() {
               className="w-full px-4 py-2 text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
               disabled={loading}
             >
-              {loading ? "Loading" : "Register"}
+              {loading ? "Loading..." : "Register"}
             </button>
             {errorMessage && (
-              <p className="mt-2 text-sm text-red-600" id="username-error">
+              <p className="mt-2 text-sm text-red-600" id="error-message">
                 {errorMessage}
               </p>
             )}

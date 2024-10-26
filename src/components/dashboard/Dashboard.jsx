@@ -57,7 +57,7 @@ const Dashboard = () => {
         const data = await res.json();
         if (res.ok) {
             setOrders(data.orders);
-            setTotalOrders(data.totalorders);
+            setTotalOrders(data.totalOrders);
             if (data.orders.length < 9) {
               setShowMoreOrders(false);
             }
@@ -76,8 +76,8 @@ const Dashboard = () => {
         });
         const data = await res.json();
         if (res.ok) {
-            setPayments(data.payements);
-            if (data.payements.length < 9) {
+            setPayments(data.payments);
+            if (data.payments.length < 9) {
               setShowMorePayments(false);
             }
           } else {
@@ -119,9 +119,9 @@ const Dashboard = () => {
       );
       const data = await res.json();
       if (res.ok) {
-        setPayments((prev) => [...prev, ...data.payements]);
-        setPayments((prev) => [...prev, ...data.payements]);
-        if (data.orders.length < 9) {
+        setPayments((prev) => [...prev, ...data.payments]);
+        setPayments((prev) => [...prev, ...data.payments]);
+        if (data.payments.length < 9) {
           setShowMorePayments(false);
         }
       }

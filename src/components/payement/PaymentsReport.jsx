@@ -16,8 +16,8 @@ const PaymentsReport = () => {
         });
         const data = await res.json();
         if (res.ok) {
-          setPayments(data.payements);
-          if (data.payements.length < 9) {
+          setPayments(data.payments);
+          if (data.payments.length < 9) {
             setShowMore(false);
           }
         } else {
@@ -73,7 +73,7 @@ const PaymentsReport = () => {
             </tr>
           </thead>
           <tbody>
-            {payments.map((payment) => (
+            {payments?.map((payment) => (
               <tr key={payment._id}>
                 <td className="py-2 px-4">{payment.paymentCode}</td>
                 <td className="py-2 px-4">{payment.paymentMethod}</td>

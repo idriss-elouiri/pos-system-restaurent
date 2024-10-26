@@ -88,7 +88,7 @@ const Payement = () => {
     return (
         <div className="p-4 max-w-full mx-auto">
             <Link
-                href={"/orders/makeOrder"}
+                href={"/orders"}
                 className="p-2 border-2 font-semibold my-3 border-green-600 rounded text-green-600 flex justify-center items-center w-fit"
             >
                 +<p>Add New Order</p>

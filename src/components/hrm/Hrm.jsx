@@ -26,8 +26,8 @@ const Hrm = () => {
           });
           const data = await res.json();
           if (res.ok) {
-            setStaffs(data.Staffs);
-            if (data.Staffs.length < 9) {
+            setStaffs(data.staffs);
+            if (data.staffs.length < 9) {
               setShowMore(false);
             }
           } else {
@@ -49,8 +49,8 @@ const Hrm = () => {
       );
       const data = await res.json();
       if (res.ok) {
-        setStaffs((prev) => [...prev, ...data.Staffs]);
-        if (data.Staffs.length < 9) {
+        setStaffs((prev) => [...prev, ...data.staffs]);
+        if (data.staffs.length < 9) {
           setShowMore(false);
         }
       }
@@ -87,13 +87,23 @@ const Hrm = () => {
 
   return (
     <div className="w-[90%] mx-auto p-4 overflow-x-auto">
-      <Link
-        href="/hrm/newStaff"
-        className="flex items-center gap-2 p-2 border-2 font-semibold border-green-600 rounded text-green-600 mb-4"
-      >
-        <FaRegUser />
-        <span>Add New Staff</span>
-      </Link>
+      <div className="flex justify-between items-center w-full h-full">
+        <Link
+          href="/hrm/newStaff"
+          className="flex items-center gap-2 p-2 border-2 font-semibold border-green-600 rounded text-green-600 mb-4"
+        >
+          <FaRegUser />
+          <span>Add New Staff</span>
+        </Link>
+        {showMore && (
+          <button
+            onClick={handleShowMore}
+            className="bg-indigo-600 text-white px-4 py-2 rounded"
+          >
+            See All Orders
+          </button>
+        )}
+      </div>
 
       {currentUser.isAdmin && staffs?.length > 0 ? (
         <>
@@ -135,15 +145,6 @@ const Hrm = () => {
               ))}
             </tbody>
           </table>
-
-          {showMore && (
-            <button
-              onClick={handleShowMore}
-              className="mt-4 w-full text-teal-500 text-sm py-2"
-            >
-              Show more
-            </button>
-          )}
         </>
       ) : (
         <p className="text-center">You have no staff yet!</p>
@@ -153,7 +154,9 @@ const Hrm = () => {
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-lg max-w-md text-center">
             <HiOutlineExclamationCircle className="mx-auto mb-4 text-4xl text-gray-500" />
-            <h3 className="text-lg mb-5">Are you sure you want to delete this staff?</h3>
+            <h3 className="text-lg mb-5">
+              Are you sure you want to delete this staff?
+            </h3>
             <div className="flex justify-center gap-4">
               <button
                 onClick={handleDeleteStaff}

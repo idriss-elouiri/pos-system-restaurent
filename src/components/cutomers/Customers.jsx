@@ -38,7 +38,9 @@ const CustomerComp = () => {
   const handleShowMore = async () => {
     const startIndex = customers.length;
     try {
-      const res = await fetch(`${apiUrl}/api/customer/getCustomer?startIndex=${startIndex}`);
+      const res = await fetch(
+        `${apiUrl}/api/customer/getCustomer?startIndex=${startIndex}`
+      );
       const data = await res.json();
       if (res.ok) {
         setCustomers((prev) => [...prev, ...data.customers]);
@@ -51,12 +53,17 @@ const CustomerComp = () => {
 
   const handleDeleteCustomer = async () => {
     try {
-      const res = await fetch(`${apiUrl}/api/customer/deleteCustomer/${customerIdToDelete}`, {
-        method: "DELETE",
-      });
+      const res = await fetch(
+        `${apiUrl}/api/customer/deleteCustomer/${customerIdToDelete}`,
+        {
+          method: "DELETE",
+        }
+      );
       const data = await res.json();
       if (res.ok) {
-        setCustomers((prev) => prev.filter((customer) => customer._id !== customerIdToDelete));
+        setCustomers((prev) =>
+          prev.filter((customer) => customer._id !== customerIdToDelete)
+        );
         setShowModal(false);
       }
     } catch (error) {
@@ -70,9 +77,23 @@ const CustomerComp = () => {
 
   return (
     <div className="w-full px-4 md:px-10 lg:px-20 py-8 bg-gray-50">
-      <Link href="/customers/newCustomer" className="mb-6 inline-flex items-center px-4 py-2 text-green-600 border border-green-600 rounded-lg font-semibold hover:bg-green-50">
-        <FaRegUser className="mr-2" /> + Add New Customer
-      </Link>
+      <div className="flex justify-between items-center w-full h-full">
+        <Link
+          href="/customers/newCustomer"
+          className="flex items-center gap-2 p-2 border-2 font-semibold border-green-600 rounded text-green-600 mb-4"
+        >
+          <FaRegUser />
+          <span>Add New Customer</span>
+        </Link>
+        {showMore && (
+          <button
+            onClick={handleShowMore}
+            className="bg-indigo-600 text-white px-4 py-2 rounded"
+          >
+            See All Orders
+          </button>
+        )}
+      </div>
 
       {currentUser.isAdmin && customers.length > 0 ? (
         <>
@@ -90,7 +111,9 @@ const CustomerComp = () => {
                 {customers.map((customer) => (
                   <tr key={customer._id} className="border-b last:border-none">
                     <td className="px-4 py-3">{customer.nameCustomer}</td>
-                    <td className="px-4 py-3">{customer.phoneNumberCustomer}</td>
+                    <td className="px-4 py-3">
+                      {customer.phoneNumberCustomer}
+                    </td>
                     <td className="px-4 py-3">{customer.emailCustomer}</td>
                     <td className="px-4 py-3 flex justify-center space-x-2">
                       <button
@@ -114,25 +137,20 @@ const CustomerComp = () => {
               </tbody>
             </table>
           </div>
-
-          {showMore && (
-            <button
-              onClick={handleShowMore}
-              className="mt-6 w-full text-teal-500 text-sm"
-            >
-              Show more
-            </button>
-          )}
         </>
       ) : (
-        <p className="text-gray-500 text-center mt-4">You have no customers yet!</p>
+        <p className="text-gray-500 text-center mt-4">
+          You have no customers yet!
+        </p>
       )}
 
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-3/4 max-w-md text-center">
             <HiOutlineExclamationCircle className="w-14 h-14 mx-auto text-gray-400 mb-4" />
-            <h3 className="mb-5 text-lg text-gray-600">Are you sure you want to delete this customer?</h3>
+            <h3 className="mb-5 text-lg text-gray-600">
+              Are you sure you want to delete this customer?
+            </h3>
             <div className="flex justify-center space-x-4">
               <button
                 onClick={handleDeleteCustomer}

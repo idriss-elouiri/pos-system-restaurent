@@ -7,39 +7,39 @@ import {
   signInSuccess,
   signInFailure,
 } from "../../redux/user/userSlice";
+
 export default function Login() {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
+  const [formData, setFormData] = useState({ email: "", password: "" });
   const { loading, error: errorMessage } = useSelector((state) => state.user);
   const dispatch = useDispatch();
-  const navigate = useRouter();
+  const router = useRouter();
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-
+console.log(errorMessage)
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    dispatch(signInStart());
     try {
-      dispatch(signInStart());
       const res = await fetch(`${apiUrl}/api/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
-        credentials: 'include'
+        credentials: "include",
       });
-      const data = await res.json();
-      if (data.success === false) {
-        dispatch(signInFailure(data.message));
-      }
 
-      if (res.ok) {
+      const data = await res.json();
+      
+      if (!res.ok || data.success === false) {
+        dispatch(signInFailure(data.message));
+        throw new Error(data.message || "Login failed. Please try again.");
+
+      }
+      if(res.ok){
         dispatch(signInSuccess(data));
-        navigate.push("/");
       }
     } catch (error) {
       dispatch(signInFailure(error.message));
@@ -53,10 +53,7 @@ export default function Login() {
         <form className="space-y-4" onSubmit={handleSubmit}>
           {/* Email Field */}
           <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-gray-700"
-            >
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
               Email
             </label>
             <input
@@ -72,10 +69,7 @@ export default function Login() {
 
           {/* Password Field */}
           <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-gray-700"
-            >
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
               Password
             </label>
             <input
@@ -88,9 +82,15 @@ export default function Login() {
               placeholder="Enter your password"
             />
           </div>
-          <Link href="/adminRegister" className="my-1">
-            I dont have an account
-          </Link>
+
+          {/* Register Link */}
+          <p className="text-sm text-center text-gray-500 my-2">
+            Don't have an account?{" "}
+            <Link href="/adminRegister" className="text-indigo-600 hover:underline">
+              Register here
+            </Link>
+          </p>
+
           {/* Submit Button */}
           <div>
             <button
@@ -98,12 +98,12 @@ export default function Login() {
               className="w-full px-4 py-2 text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
               disabled={loading}
             >
-              {loading ? "Loading" : "Login"}
+              {loading ? "Loading..." : "Login"}
             </button>
 
             {/* Error Message */}
             {errorMessage && (
-              <p className="mt-2 text-sm text-red-600" id="username-error">
+              <p className="mt-2 text-sm text-red-600" id="error-message">
                 {errorMessage}
               </p>
             )}
