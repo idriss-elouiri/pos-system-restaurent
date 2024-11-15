@@ -1,8 +1,20 @@
-// redux/store.js
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import userReducer from "./user/userSlice";
 import { persistReducer, persistStore } from "redux-persist";
-import storage from "@/components/Storage";
+
+// تحقق إذا كانت البيئة هي المتصفح
+let storage;
+if (typeof window !== "undefined") {
+  // في حال كان في المتصفح
+  storage = require("redux-persist/lib/storage").default; // استيراد التخزين المحلي
+} else {
+  // في حال كان في الخادم
+  storage = {
+    getItem: () => Promise.resolve(null),
+    setItem: () => Promise.resolve(),
+    removeItem: () => Promise.resolve(),
+  }; // تخزين فارغ يعمل على الخادم فقط
+}
 
 const rootReducer = combineReducers({
   user: userReducer,
