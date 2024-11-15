@@ -1,10 +1,12 @@
-import PrintComp from '@/components/receipts/PrintComp'
-import React from 'react'
+"use client";
 
-const Print = () => {
+import PrintComp from "@/components/receipts/PrintComp";
+import React from "react";
+
+export default function Print() {
   return (
-    <><PrintComp/></>
-  )
+    <>
+      <PrintComp />
+    </>
+  );
 }
-
-export default Print

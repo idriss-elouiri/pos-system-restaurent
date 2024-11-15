@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React, { useState } from "react";
 import Link from "next/link";
@@ -10,13 +10,12 @@ import {
   signInFailure,
 } from "../../redux/user/userSlice";
 
-export default function AdminLogin() {
+export default function AdminLoginComp() {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const { loading, error: errorMessage } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const router = useRouter();
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-console.log(errorMessage)
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
@@ -34,15 +33,14 @@ console.log(errorMessage)
       });
 
       const data = await res.json();
-      
+
       if (!res.ok || data.success === false) {
         dispatch(signInFailure(data.message));
         throw new Error(data.message || "Login failed. Please try again.");
-
       }
-      if(res.ok){
+      if (res.ok) {
         dispatch(signInSuccess(data));
-        router.push("/dashboard")
+        router.push("/dashboard");
       }
     } catch (error) {
       dispatch(signInFailure(error.message));
@@ -56,7 +54,10 @@ console.log(errorMessage)
         <form className="space-y-4" onSubmit={handleSubmit}>
           {/* Email Field */}
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700"
+            >
               Email
             </label>
             <input
@@ -72,7 +73,10 @@ console.log(errorMessage)
 
           {/* Password Field */}
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-700"
+            >
               Password
             </label>
             <input
@@ -89,7 +93,10 @@ console.log(errorMessage)
           {/* Register Link */}
           <p className="text-sm text-center text-gray-500 my-2">
             Don't have an account?{" "}
-            <Link href="/adminRegister" className="text-indigo-600 hover:underline">
+            <Link
+              href="/adminRegister"
+              className="text-indigo-600 hover:underline"
+            >
               Register here
             </Link>
           </p>

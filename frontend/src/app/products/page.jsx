@@ -1,13 +1,13 @@
+"use client";
+
 import Layout from "@/components/Layout";
 import Products from "@/components/products/Products";
 import React from "react";
 
-const products = () => {
+export default function products() {
   return (
     <Layout>
-      <Products/>
+      <Products />
     </Layout>
   );
-};
-
-export default products;
+}

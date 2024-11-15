@@ -1,9 +1,12 @@
-import CustomerLogin from '@/components/customerLogin/Login'
+"use client";
 
-const Customerlogin = () => {
+import CustomerLoginComp from "@/components/customerLoginComp/CustomerLogin";
+
+
+export default function CustomerLogin() {
   return (
-    <><CustomerLogin/></>
-  )
+    <>
+      <CustomerLoginComp />
+    </>
+  );
 }
-
-export default Customerlogin

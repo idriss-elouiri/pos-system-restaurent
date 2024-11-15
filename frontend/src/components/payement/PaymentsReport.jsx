@@ -16,53 +16,57 @@ const PaymentsReport = () => {
   const isCustomer = currentUser?.isCustomer;
 
   useEffect(() => {
-    const fetchPayments = async () => {
-      setLoading(true);
-      try {
-        const res = await fetch(`${apiUrl}/api/payments/get`, {
-          method: "GET",
-          credentials: "include",
-        });
-        const data = await res.json();
-        if (res.ok) {
-          setPayments(data.payments);
-          if (data.payments.length < 9) {
-            setShowMore(false);
+    if (typeof window !== "undefined") {
+      const fetchPayments = async () => {
+        setLoading(true);
+        try {
+          const res = await fetch(`${apiUrl}/api/payments/get`, {
+            method: "GET",
+            credentials: "include",
+          });
+          const data = await res.json();
+          if (res.ok) {
+            setPayments(data.payments);
+            if (data.payments.length < 9) {
+              setShowMore(false);
+            }
+          } else {
+            throw new Error(data.message);
           }
-        } else {
-          throw new Error(data.message);
+        } catch (error) {
+          setError(error.message);
+        } finally {
+          setLoading(false);
         }
-      } catch (error) {
-        setError(error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchPayments();
+      };
+      fetchPayments();
+    }
   }, [apiUrl]);
 
   useEffect(() => {
-    const fetchPaymentsCustomer = async () => {
-      try {
-        const res = await fetch(
-          `${apiUrl}/api/payments/getPaymentCts/${currentUser._id}`,
-          {
-            method: "GET",
-            credentials: "include",
+    if (typeof window !== "undefined") {
+      const fetchPaymentsCustomer = async () => {
+        try {
+          const res = await fetch(
+            `${apiUrl}/api/payments/getPaymentCts/${currentUser._id}`,
+            {
+              method: "GET",
+              credentials: "include",
+            }
+          );
+          const data = await res.json();
+          if (res.ok) {
+            setPaymentsCustomer(data);
+          } else {
+            throw new Error(data.message);
           }
-        );
-        const data = await res.json();
-        if (res.ok) {
-          setPaymentsCustomer(data);
-        } else {
-          throw new Error(data.message);
+        } catch (error) {
+          setError(error.message);
         }
-      } catch (error) {
-        setError(error.message);
+      };
+      if (isCustomer) {
+        fetchPaymentsCustomer();
       }
-    };
-    if (isCustomer) {
-      fetchPaymentsCustomer();
     }
   }, [apiUrl, currentUser._id]);
 

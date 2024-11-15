@@ -16,51 +16,55 @@ const OrderForm = () => {
     customerName: currentUser.nameCustomer || "",
     customerId: currentUser._id || "",
     orderCode: `STF-${Date.now().toString().slice(-6)}`,
-    productName: '',
+    productName: "",
     productPrice: null,
-    productQty: '',
+    productQty: "",
   });
 
   useEffect(() => {
-    const fetchCustomers = async () => {
-      try {
-        const res = await fetch(`${apiUrl}/api/customer/getCustomers`, {
-          method: "GET",
-          credentials: "include",
-        });
-        const data = await res.json();
-        setCustomers(data.customers);
-      } catch (error) {
-        console.error('Error fetching customers:', error);
-        setErrorMessage('Failed to load customers.');
-      }
-    };
-    fetchCustomers();
+    if (typeof window !== "undefined") {
+      const fetchCustomers = async () => {
+        try {
+          const res = await fetch(`${apiUrl}/api/customer/getCustomers`, {
+            method: "GET",
+            credentials: "include",
+          });
+          const data = await res.json();
+          setCustomers(data.customers);
+        } catch (error) {
+          console.error("Error fetching customers:", error);
+          setErrorMessage("Failed to load customers.");
+        }
+      };
+      fetchCustomers();
+    }
   }, [apiUrl]);
 
   useEffect(() => {
-    const getProduct = async () => {
-      try {
-        const res = await fetch(`${apiUrl}/api/product/${id}`);
-        const data = await res.json();
+    if (typeof window !== "undefined") {
+      const getProduct = async () => {
+        try {
+          const res = await fetch(`${apiUrl}/api/product/${id}`);
+          const data = await res.json();
 
-        if (!res.ok) {
-          throw new Error(data.message || 'Failed to fetch product data');
+          if (!res.ok) {
+            throw new Error(data.message || "Failed to fetch product data");
+          }
+
+          setFormData((prevData) => ({
+            ...prevData,
+            productPrice: data.productPrice,
+            productName: data.productName,
+          }));
+        } catch (err) {
+          setErrorMessage(err.message);
+        } finally {
+          setLoading(false);
         }
-
-        setFormData((prevData) => ({
-          ...prevData,
-          productPrice: data.productPrice,
-          productName: data.productName,
-        }));
-      } catch (err) {
-        setErrorMessage(err.message);
-      } finally {
-        setLoading(false);
+      };
+      if (id) {
+        getProduct();
       }
-    };
-    if (id) {
-      getProduct();
     }
   }, [id, apiUrl]);
 
@@ -73,7 +77,7 @@ const OrderForm = () => {
     setFormData((prevData) => ({
       ...prevData,
       customerName: selectedCustomerName,
-      customerId: selectedCustomer ? selectedCustomer._id : '',
+      customerId: selectedCustomer ? selectedCustomer._id : "",
     }));
   };
 
@@ -113,12 +117,19 @@ const OrderForm = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100 p-4">
       <div className="w-full max-w-lg p-6 space-y-4 bg-white shadow-lg rounded-lg">
-        <h2 className="text-2xl font-bold text-center text-gray-700">Order Form</h2>
-        {errorMessage && <p className="text-red-500 text-center">{errorMessage}</p>}
+        <h2 className="text-2xl font-bold text-center text-gray-700">
+          Order Form
+        </h2>
+        {errorMessage && (
+          <p className="text-red-500 text-center">{errorMessage}</p>
+        )}
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Customer Name */}
           <div>
-            <label htmlFor="customerName" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="customerName"
+              className="block text-sm font-medium text-gray-700"
+            >
               Customer Name
             </label>
             <select
@@ -139,7 +150,10 @@ const OrderForm = () => {
 
           {/* Customer ID */}
           <div>
-            <label htmlFor="customerId" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="customerId"
+              className="block text-sm font-medium text-gray-700"
+            >
               Customer ID
             </label>
             <input
@@ -153,7 +167,10 @@ const OrderForm = () => {
 
           {/* Order Code */}
           <div>
-            <label htmlFor="orderCode" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="orderCode"
+              className="block text-sm font-medium text-gray-700"
+            >
               Order Code
             </label>
             <input
@@ -167,13 +184,16 @@ const OrderForm = () => {
 
           {/* Price */}
           <div>
-            <label htmlFor="productPrice" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="productPrice"
+              className="block text-sm font-medium text-gray-700"
+            >
               Price
             </label>
             <input
               type="number"
               id="productPrice"
-              value={formData.productPrice || ''}
+              value={formData.productPrice || ""}
               readOnly
               className="w-full px-3 py-2 mt-1 border rounded-md bg-gray-100 focus:outline-none"
             />
@@ -181,7 +201,10 @@ const OrderForm = () => {
 
           {/* Quantity */}
           <div>
-            <label htmlFor="productQty" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="productQty"
+              className="block text-sm font-medium text-gray-700"
+            >
               Quantity
             </label>
             <input
@@ -200,7 +223,7 @@ const OrderForm = () => {
               type="submit"
               className="w-full px-4 py-2 text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             >
-              {loading ? 'Submitting...' : 'Submit Order'}
+              {loading ? "Submitting..." : "Submit Order"}
             </button>
           </div>
         </form>

@@ -23,58 +23,62 @@ const Payment = () => {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
   useEffect(() => {
-    const fetchOrders = async () => {
-      setLoading(true);
-      setErrorMessage("");
-      try {
-        const res = await fetch(`${apiUrl}/api/order/getorders`, {
-          method: "GET",
-          credentials: "include",
-        });
-        const { orders: fetchedOrders } = await res.json();
-        if (res.ok) {
-          setOrders(fetchedOrders);
-          setShowMore(fetchedOrders.length >= 9);
-        } else {
-          setErrorMessage("Failed to fetch orders.");
+    if (typeof window !== "undefined") {
+      const fetchOrders = async () => {
+        setLoading(true);
+        setErrorMessage("");
+        try {
+          const res = await fetch(`${apiUrl}/api/order/getorders`, {
+            method: "GET",
+            credentials: "include",
+          });
+          const { orders: fetchedOrders } = await res.json();
+          if (res.ok) {
+            setOrders(fetchedOrders);
+            setShowMore(fetchedOrders.length >= 9);
+          } else {
+            setErrorMessage("Failed to fetch orders.");
+          }
+        } catch (error) {
+          setErrorMessage("An error occurred while fetching orders.");
+        } finally {
+          setLoading(false);
         }
-      } catch (error) {
-        setErrorMessage("An error occurred while fetching orders.");
-      } finally {
-        setLoading(false);
-      }
-    };
+      };
 
-    fetchOrders();
+      fetchOrders();
+    }
   }, [currentUser._id]);
 
   useEffect(() => {
-    const fetchOrdersCustomer = async () => {
-      setLoading(true);
-      setErrorMessage("");
-      try {
-        const res = await fetch(
-          `${apiUrl}/api/order/getCustomerOrder/${currentUser._id}`,
-          {
-            method: "GET",
-            credentials: "include",
+    if (typeof window !== "undefined") {
+      const fetchOrdersCustomer = async () => {
+        setLoading(true);
+        setErrorMessage("");
+        try {
+          const res = await fetch(
+            `${apiUrl}/api/order/getCustomerOrder/${currentUser._id}`,
+            {
+              method: "GET",
+              credentials: "include",
+            }
+          );
+          const data = await res.json();
+          if (res.ok) {
+            setOrdersCustomer(data);
+          } else {
+            setErrorMessage("Failed to fetch customer orders.");
           }
-        );
-        const data = await res.json();
-        if (res.ok) {
-          setOrdersCustomer(data);
-        } else {
-          setErrorMessage("Failed to fetch customer orders.");
+        } catch (error) {
+          setErrorMessage("An error occurred while fetching customer orders.");
+        } finally {
+          setLoading(false);
         }
-      } catch (error) {
-        setErrorMessage("An error occurred while fetching customer orders.");
-      } finally {
-        setLoading(false);
-      }
-    };
+      };
 
-    if (isCustomer) {
-      fetchOrdersCustomer();
+      if (isCustomer) {
+        fetchOrdersCustomer();
+      }
     }
   }, [currentUser._id]);
 
@@ -208,7 +212,7 @@ const Payment = () => {
                   <td className="px-4 py-2">{orderCustomer.customerName}</td>
                   <td className="px-4 py-2">{orderCustomer.productName}</td>
                   <td className="px-4 py-2">
-                    ${(orderCustomer.productPrice).toFixed(2)}
+                    ${orderCustomer.productPrice.toFixed(2)}
                   </td>
                   <td className="px-4 py-2">{orderCustomer.createdAt}</td>
                   <td className="flex justify-center items-center gap-3 px-4 py-2">
@@ -231,12 +235,8 @@ const Payment = () => {
       {showModal && (
         <div className="fixed z-50 inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white rounded-lg p-5">
-            <h2 className="text-lg font-semibold mb-4">
-              Confirm Deletion
-            </h2>
-            <p className="mb-4">
-              Are you sure you want to delete this order?
-            </p>
+            <h2 className="text-lg font-semibold mb-4">Confirm Deletion</h2>
+            <p className="mb-4">Are you sure you want to delete this order?</p>
             <div className="flex justify-end">
               <button
                 className="bg-gray-300 px-4 py-2 rounded mr-2"

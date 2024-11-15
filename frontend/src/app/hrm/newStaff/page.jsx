@@ -1,12 +1,12 @@
+"use client";
+
 import FormRegisterStaff from "@/components/hrm/FormRegisterStaff";
 import React from "react";
 
-const newStaff = () => {
+export default function newStaff() {
   return (
     <>
       <FormRegisterStaff />
     </>
   );
-};
-
-export default newStaff;
+}

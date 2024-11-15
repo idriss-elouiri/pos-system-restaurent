@@ -20,27 +20,29 @@ const Products = () => {
   const router = useRouter();
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      setLoading(true); // Start loading
-      try {
-        const res = await fetch(`${apiUrl}/api/product/getProducts`, {
-          method: "GET",
-          credentials: "include",
-        });
-        const data = await res.json();
-        if (res.ok) {
-          setProducts(data.products);
-          setShowMore(data.products.length >= 9);
-        } else {
-          console.error(data.message);
+    if (typeof window !== "undefined") {
+      const fetchProducts = async () => {
+        setLoading(true); // Start loading
+        try {
+          const res = await fetch(`${apiUrl}/api/product/getProducts`, {
+            method: "GET",
+            credentials: "include",
+          });
+          const data = await res.json();
+          if (res.ok) {
+            setProducts(data.products);
+            setShowMore(data.products.length >= 9);
+          } else {
+            console.error(data.message);
+          }
+        } catch (error) {
+          console.error("Error fetching products:", error);
+        } finally {
+          setLoading(false); // Stop loading
         }
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      } finally {
-        setLoading(false); // Stop loading
-      }
-    };
-    fetchProducts();
+      };
+      fetchProducts();
+    }
   }, [currentUser._id]);
 
   const handleShowMore = async () => {
@@ -102,7 +104,7 @@ const Products = () => {
         Add New Product
       </Link>
 
-      {(isAdmin || isStaff) ? (
+      {isAdmin || isStaff ? (
         <>
           <div className="overflow-auto">
             <table className="min-w-full text-sm bg-white border border-gray-200 shadow rounded-lg">

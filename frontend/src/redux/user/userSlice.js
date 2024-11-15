@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   currentUser: null,
@@ -6,61 +6,57 @@ const initialState = {
   loading: false,
 };
 
-// Utility function to handle loading and error states
-const setLoadingAndError = (state, loading, error) => {
-  state.loading = loading;
-  state.error = error;
-};
-
 const userSlice = createSlice({
-  name: 'user',
+  name: "user",
   initialState,
   reducers: {
-    // Sign In Actions
     signInStart: (state) => {
-      setLoadingAndError(state, true, null);
+      state.loading = true;
+      state.error = null;
     },
     signInSuccess: (state, action) => {
       state.currentUser = action.payload;
-      setLoadingAndError(state, false, null);
+      state.loading = false;
+      state.error = null;
     },
     signInFailure: (state, action) => {
-      setLoadingAndError(state, false, action.payload);
+      state.loading = false;
+      state.error = action.payload;
     },
-
-    // Update User Actions
     updateStart: (state) => {
-      setLoadingAndError(state, true, null);
+      state.loading = true;
+      state.error = null;
     },
     updateSuccess: (state, action) => {
       state.currentUser = action.payload;
-      setLoadingAndError(state, false, null);
+      state.loading = false;
+      state.error = null;
     },
     updateFailure: (state, action) => {
-      setLoadingAndError(state, false, action.payload);
+      state.loading = false;
+      state.error = action.payload;
     },
-
-    // Delete User Actions
     deleteUserStart: (state) => {
-      setLoadingAndError(state, true, null);
+      state.loading = true;
+      state.error = null;
     },
     deleteUserSuccess: (state) => {
       state.currentUser = null;
-      setLoadingAndError(state, false, null);
+      state.loading = false;
+      state.error = null;
     },
     deleteUserFailure: (state, action) => {
-      setLoadingAndError(state, false, action.payload);
+      state.loading = false;
+      state.error = action.payload;
     },
-
-    // Sign Out Action
     signoutSuccess: (state) => {
       state.currentUser = null;
-      setLoadingAndError(state, false, null);
+      state.error = null;
+      state.loading = false;
     },
   },
 });
 
-// Exporting actions for use in components
 export const {
   signInStart,
   signInSuccess,
@@ -74,5 +70,4 @@ export const {
   signoutSuccess,
 } = userSlice.actions;
 
-// Default export of the reducer
 export default userSlice.reducer;

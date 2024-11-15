@@ -1,12 +1,11 @@
+
 import FormRegisterCustomer from "@/components/cutomers/FormRegisterCustomer";
 import React from "react";
 
-const newCustomer = () => {
+export default function newCustomer() {
   return (
     <>
       <FormRegisterCustomer />
     </>
   );
-};
-
-export default newCustomer;
+}

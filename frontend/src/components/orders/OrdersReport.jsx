@@ -10,49 +10,51 @@ const OrdersReport = () => {
   const [ordersCustomer, setOrdersCustomer] = useState([]);
   const [orders, setOrders] = useState([]);
   const [showMoreOrders, setShowMoreOrders] = useState(true);
-  
+
   const isAdmin = currentUser?.isAdmin;
   const isStaff = currentUser?.isStaff;
   const isCustomer = currentUser?.isCustomer;
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
   useEffect(() => {
-    const fetchOrders = async () => {
-      try {
-        const [ordersRes, customerOrdersRes] = await Promise.all([
-          fetch(`${apiUrl}/api/order/getorders`, {
-            method: "GET",
-            credentials: "include",
-          }),
-          fetch(`${apiUrl}/api/order/getCustomerOrder/${currentUser._id}`, {
-            method: "GET",
-            credentials: "include",
-          }),
-        ]);
+    if (typeof window !== "undefined") {
+      const fetchOrders = async () => {
+        try {
+          const [ordersRes, customerOrdersRes] = await Promise.all([
+            fetch(`${apiUrl}/api/order/getorders`, {
+              method: "GET",
+              credentials: "include",
+            }),
+            fetch(`${apiUrl}/api/order/getCustomerOrder/${currentUser._id}`, {
+              method: "GET",
+              credentials: "include",
+            }),
+          ]);
 
-        const ordersData = await ordersRes.json();
-        const customerOrdersData = await customerOrdersRes.json();
+          const ordersData = await ordersRes.json();
+          const customerOrdersData = await customerOrdersRes.json();
 
-        if (ordersRes.ok) {
-          setOrders(ordersData.orders);
-          if (ordersData.orders.length < 9) {
-            setShowMoreOrders(false);
+          if (ordersRes.ok) {
+            setOrders(ordersData.orders);
+            if (ordersData.orders.length < 9) {
+              setShowMoreOrders(false);
+            }
+          } else {
+            console.error(ordersData.message);
           }
-        } else {
-          console.error(ordersData.message);
-        }
 
-        if (customerOrdersRes.ok) {
-          setOrdersCustomer(customerOrdersData);
-        } else {
-          console.error(customerOrdersData.message);
+          if (customerOrdersRes.ok) {
+            setOrdersCustomer(customerOrdersData);
+          } else {
+            console.error(customerOrdersData.message);
+          }
+        } catch (error) {
+          console.error("Error fetching orders: ", error.message);
         }
-      } catch (error) {
-        console.error("Error fetching orders: ", error.message);
-      }
-    };
+      };
 
-    fetchOrders();
+      fetchOrders();
+    }
   }, [currentUser]);
 
   const handleShowMoreOrders = async () => {

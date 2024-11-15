@@ -1,11 +1,13 @@
-import Layout from '@/components/Layout'
-import OrderForm from '@/components/orders/OrderForm'
-import React from 'react'
+"use client";
 
-const placeOrder = () => {
+import Layout from "@/components/Layout";
+import OrderForm from "@/components/orders/OrderForm";
+import React from "react";
+
+export default function placeOrder() {
   return (
-    <Layout><OrderForm/></Layout>
-  )
+    <Layout>
+      <OrderForm />
+    </Layout>
+  );
 }
-
-export default placeOrder

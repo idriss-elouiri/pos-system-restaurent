@@ -2,12 +2,10 @@ import CustomerComp from "@/components/cutomers/Customers";
 import Layout from "@/components/Layout";
 import React from "react";
 
-const Customers = () => {
+export default function Customers() {
   return (
     <Layout>
-      <CustomerComp/>
+      <CustomerComp />
     </Layout>
   );
-};
-
-export default Customers;
+}

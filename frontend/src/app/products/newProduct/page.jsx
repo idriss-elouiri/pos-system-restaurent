@@ -1,12 +1,12 @@
+"use client";
+
 import FormProduct from "@/components/products/FormProduct";
 import React from "react";
 
-const newProduct = () => {
+export default function newProduct() {
   return (
     <>
       <FormProduct />
     </>
   );
-};
-
-export default newProduct;
+}

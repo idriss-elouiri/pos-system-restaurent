@@ -1,11 +1,12 @@
-import Layout from '@/components/Layout'
-import EditProduct from '@/components/products/EditProduct'
+"use client";
 
-const editProduct = () => {
+import Layout from "@/components/Layout";
+import EditProduct from "@/components/products/EditProduct";
 
+export default function editProduct() {
   return (
-    <Layout><EditProduct /></Layout>
-  )
+    <Layout>
+      <EditProduct />
+    </Layout>
+  );
 }
-
-export default editProduct

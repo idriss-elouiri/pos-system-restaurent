@@ -21,7 +21,6 @@ import {
   signoutSuccess,
 } from "../../redux/user/userSlice";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 export default function ProfileAdmin() {

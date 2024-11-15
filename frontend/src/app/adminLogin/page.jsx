@@ -1,11 +1,3 @@
-import AdminLogin from "@/components/adminRegistiration/Login";
-
-const Adminlogin = () => {
-  return (
-    <>
-      <AdminLogin />
-    </>
-  );
-};
-
-export default Adminlogin;
+export default function AdminLogin() {
+  // الكود الخاص بالصفحة
+}

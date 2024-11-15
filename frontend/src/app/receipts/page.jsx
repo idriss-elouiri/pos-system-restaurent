@@ -1,11 +1,13 @@
-import Layout from '@/components/Layout'
-import ReceiptComp from '@/components/receipts/ReceiptsComp'
-import React from 'react'
+"use client";
 
-const receiptsPage = () => {
+import Layout from "@/components/Layout";
+import ReceiptComp from "@/components/receipts/ReceiptsComp";
+import React from "react";
+
+export default function receiptsPage() {
   return (
-    <Layout><ReceiptComp/></Layout>
-  )
+    <Layout>
+      <ReceiptComp />
+    </Layout>
+  );
 }
-
-export default receiptsPage

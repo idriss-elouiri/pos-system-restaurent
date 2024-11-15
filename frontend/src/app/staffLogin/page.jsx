@@ -1,11 +1,11 @@
-import StaffLogin from "@/components/staffLogin/Login";
+"use client";
 
-const Stafflogin = () => {
+import StaffLoginComp from "@/components/staffLoginComp/StaffLogin";
+
+export default function Stafflogin() {
   return (
     <>
-      <StaffLogin />
+      <StaffLoginComp />
     </>
   );
-};
-
-export default Stafflogin;
+}

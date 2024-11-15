@@ -1,11 +1,13 @@
-import Layout from '@/components/Layout'
-import OrdersReport from '@/components/orders/OrdersReport'
-import React from 'react'
+"use client";
 
-const ordersReport = () => {
+import Layout from "@/components/Layout";
+import OrdersReport from "@/components/orders/OrdersReport";
+import React from "react";
+
+export default function ordersReport() {
   return (
-    <Layout><OrdersReport/></Layout>
-  )
+    <Layout>
+      <OrdersReport />
+    </Layout>
+  );
 }
-
-export default ordersReport

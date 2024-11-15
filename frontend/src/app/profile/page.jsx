@@ -1,10 +1,7 @@
-import ProfileComp from '@/components/profile/ProfileComp'
-import React from 'react'
+"use client";
 
-const Profile = () => {
-  return (
-    <ProfileComp/>
-  )
+import ProfileComp from "@/components/profile/ProfileComp";
+
+export default function Profile() {
+  return <ProfileComp />;
 }
-
-export default Profile

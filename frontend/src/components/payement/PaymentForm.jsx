@@ -12,7 +12,7 @@ const PaymentForm = () => {
     paymentMethod: "cash",
     orderCode: "",
   });
-  
+
   const { id } = useParams();
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -47,26 +47,29 @@ const PaymentForm = () => {
   };
 
   useEffect(() => {
-    const getProduct = async () => {
-      try {
-        const res = await fetch(`${apiUrl}/api/order/${id}`);
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.message || "Failed to fetch product data");
-        setFormData((prevData) => ({
-          ...prevData,
-          amount: (data.productQty * data.productPrice).toFixed(2),
-          paymentId: currentUser._id,
-          orderCode: data.orderCode,
-        }));
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
+    if (typeof window !== "undefined") {
+      const getProduct = async () => {
+        try {
+          const res = await fetch(`${apiUrl}/api/order/${id}`);
+          const data = await res.json();
+          if (!res.ok)
+            throw new Error(data.message || "Failed to fetch product data");
+          setFormData((prevData) => ({
+            ...prevData,
+            amount: (data.productQty * data.productPrice).toFixed(2),
+            paymentId: currentUser._id,
+            orderCode: data.orderCode,
+          }));
+        } catch (err) {
+          setError(err.message);
+        } finally {
+          setLoading(false);
+        }
+      };
 
-    if (id) {
-      getProduct();
+      if (id) {
+        getProduct();
+      }
     }
   }, [id]);
 
@@ -85,7 +88,10 @@ const PaymentForm = () => {
 
         {/* Payment ID */}
         <div>
-          <label htmlFor="paymentId" className="block text-sm font-medium text-gray-700">
+          <label
+            htmlFor="paymentId"
+            className="block text-sm font-medium text-gray-700"
+          >
             Payment ID
           </label>
           <input
@@ -99,7 +105,10 @@ const PaymentForm = () => {
 
         {/* Payment Code */}
         <div>
-          <label htmlFor="paymentCode" className="block text-sm font-medium text-gray-700">
+          <label
+            htmlFor="paymentCode"
+            className="block text-sm font-medium text-gray-700"
+          >
             Payment Code
           </label>
           <input
@@ -113,7 +122,10 @@ const PaymentForm = () => {
 
         {/* Order Code */}
         <div>
-          <label htmlFor="orderCode" className="block text-sm font-medium text-gray-700">
+          <label
+            htmlFor="orderCode"
+            className="block text-sm font-medium text-gray-700"
+          >
             Order Code
           </label>
           <input
@@ -127,7 +139,10 @@ const PaymentForm = () => {
 
         {/* Amount */}
         <div>
-          <label htmlFor="amount" className="block text-sm font-medium text-gray-700">
+          <label
+            htmlFor="amount"
+            className="block text-sm font-medium text-gray-700"
+          >
             Amount
           </label>
           <input
@@ -143,7 +158,10 @@ const PaymentForm = () => {
 
         {/* Payment Method */}
         <div>
-          <label htmlFor="paymentMethod" className="block text-sm font-medium text-gray-700">
+          <label
+            htmlFor="paymentMethod"
+            className="block text-sm font-medium text-gray-700"
+          >
             Payment Method
           </label>
           <select

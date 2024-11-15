@@ -15,39 +15,43 @@ const Orders = () => {
   const router = useRouter();
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const res = await fetch(`${apiUrl}/api/product/getProducts`, {
-          method: "GET",
-          credentials: "include",
-        });
-        const data = await res.json();
-        if (res.ok) {
-          setProducts(data.products);
-          setShowMore(data.products.length >= 9);
-        } else {
-          console.error(data.message);
+    if (typeof window !== "undefined") {
+      const fetchProducts = async () => {
+        try {
+          const res = await fetch(`${apiUrl}/api/product/getProducts`, {
+            method: "GET",
+            credentials: "include",
+          });
+          const data = await res.json();
+          if (res.ok) {
+            setProducts(data.products);
+            setShowMore(data.products.length >= 9);
+          } else {
+            console.error(data.message);
+          }
+        } catch (error) {
+          console.error("Error fetching products:", error);
+        } finally {
+          setLoading(false);
         }
-      } catch (error) {
-        console.error('Error fetching products:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchProducts();
+      };
+      fetchProducts();
+    }
   }, [apiUrl]);
 
   const handleShowMore = async () => {
     const startIndex = products.length;
     try {
-      const res = await fetch(`${apiUrl}/api/product/getProducts?startIndex=${startIndex}`);
+      const res = await fetch(
+        `${apiUrl}/api/product/getProducts?startIndex=${startIndex}`
+      );
       const data = await res.json();
       if (res.ok) {
         setProducts((prev) => [...prev, ...data.products]);
         setShowMore(data.products.length >= 9);
       }
     } catch (error) {
-      console.error('Error fetching more products:', error);
+      console.error("Error fetching more products:", error);
     }
   };
 
@@ -61,22 +65,37 @@ const Orders = () => {
 
   return (
     <div className="w-full p-3 max-w-4xl mx-auto overflow-x-auto">
-      {(currentUser?.isAdmin || currentUser?.isStaff || currentUser?.isCustomer) ? (
+      {currentUser?.isAdmin ||
+      currentUser?.isStaff ||
+      currentUser?.isCustomer ? (
         <>
           {products.length > 0 ? (
             <table className="w-full border-collapse shadow-lg text-center">
               <thead className="bg-gray-200">
                 <tr className="text-gray-700">
-                  <th scope="col" className="px-4 py-2 border">IMAGE</th>
-                  <th scope="col" className="px-4 py-2 border">PRODUCT CODE</th>
-                  <th scope="col" className="px-4 py-2 border">NAME</th>
-                  <th scope="col" className="px-4 py-2 border">PRICE</th>
-                  <th scope="col" className="px-4 py-2 border">ACTIONS</th>
+                  <th scope="col" className="px-4 py-2 border">
+                    IMAGE
+                  </th>
+                  <th scope="col" className="px-4 py-2 border">
+                    PRODUCT CODE
+                  </th>
+                  <th scope="col" className="px-4 py-2 border">
+                    NAME
+                  </th>
+                  <th scope="col" className="px-4 py-2 border">
+                    PRICE
+                  </th>
+                  <th scope="col" className="px-4 py-2 border">
+                    ACTIONS
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {products.map((product) => (
-                  <tr key={product._id} className="bg-white hover:bg-gray-100 border-b">
+                  <tr
+                    key={product._id}
+                    className="bg-white hover:bg-gray-100 border-b"
+                  >
                     <td className="px-4 py-2 border">
                       <img
                         src={product.productImage}
@@ -86,7 +105,9 @@ const Orders = () => {
                     </td>
                     <td className="px-4 py-2 border">{product.productCode}</td>
                     <td className="px-4 py-2 border">{product.productName}</td>
-                    <td className="px-4 py-2 border">${product.productPrice}</td>
+                    <td className="px-4 py-2 border">
+                      ${product.productPrice}
+                    </td>
                     <td className="px-4 py-2 border">
                       <button
                         onClick={() => handlePlaceOrder(product._id)}
@@ -119,6 +140,5 @@ const Orders = () => {
     </div>
   );
 };
-
 
 export default Orders;

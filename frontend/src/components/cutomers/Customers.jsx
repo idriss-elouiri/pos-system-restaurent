@@ -20,36 +20,39 @@ const CustomerComp = () => {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   const router = useRouter();
 
-  const fetchCustomers = async () => {
-    setLoading(true);
-    setErrorMessage("");
-    try {
-      const res = await fetch(`${apiUrl}/api/customer/getCustomers`, {
-        method: "GET",
-        credentials: "include",
-      });
-      const data = await res.json();
-      if (res.ok) {
-        setCustomers(data.customers);
-        setShowMore(data.customers.length >= 9);
-      } else {
-        setErrorMessage(data.message || "Failed to fetch customers.");
-      }
-    } catch (error) {
-      setErrorMessage(error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    fetchCustomers();
+    if (typeof window !== "undefined") {
+      const fetchCustomers = async () => {
+        setLoading(true);
+        setErrorMessage("");
+        try {
+          const res = await fetch(`${apiUrl}/api/customer/getCustomers`, {
+            method: "GET",
+            credentials: "include",
+          });
+          const data = await res.json();
+          if (res.ok) {
+            setCustomers(data.customers);
+            setShowMore(data.customers.length >= 9);
+          } else {
+            setErrorMessage(data.message || "Failed to fetch customers.");
+          }
+        } catch (error) {
+          setErrorMessage(error.message);
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchCustomers();
+    }
   }, [currentUser._id]);
 
   const handleShowMore = async () => {
     const startIndex = customers.length;
     try {
-      const res = await fetch(`${apiUrl}/api/customer/getCustomer?startIndex=${startIndex}`);
+      const res = await fetch(
+        `${apiUrl}/api/customer/getCustomer?startIndex=${startIndex}`
+      );
       const data = await res.json();
       if (res.ok) {
         setCustomers((prev) => [...prev, ...data.customers]);
@@ -62,11 +65,16 @@ const CustomerComp = () => {
 
   const handleDeleteCustomer = async () => {
     try {
-      const res = await fetch(`${apiUrl}/api/user/adminDeleteCustomer/${customerIdToDelete}`, {
-        method: "DELETE",
-      });
+      const res = await fetch(
+        `${apiUrl}/api/user/adminDeleteCustomer/${customerIdToDelete}`,
+        {
+          method: "DELETE",
+        }
+      );
       if (res.ok) {
-        setCustomers((prev) => prev.filter((customer) => customer._id !== customerIdToDelete));
+        setCustomers((prev) =>
+          prev.filter((customer) => customer._id !== customerIdToDelete)
+        );
         setShowModal(false);
       }
     } catch (error) {
@@ -102,7 +110,7 @@ const CustomerComp = () => {
         <p>Loading customers...</p>
       ) : errorMessage ? (
         <p className="text-red-600">{errorMessage}</p>
-      ) : (isAdmin || isStaff) ? (
+      ) : isAdmin || isStaff ? (
         <div className="overflow-x-auto">
           <table className="min-w-full border bg-white shadow-md rounded-lg text-center">
             <thead className="bg-gray-200">
@@ -144,14 +152,18 @@ const CustomerComp = () => {
           </table>
         </div>
       ) : (
-        <p className="text-gray-500 text-center mt-4">You have no customers yet!</p>
+        <p className="text-gray-500 text-center mt-4">
+          You have no customers yet!
+        </p>
       )}
 
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-3/4 max-w-md text-center">
             <HiOutlineExclamationCircle className="w-14 h-14 mx-auto text-gray-400 mb-4" />
-            <h3 className="mb-5 text-lg text-gray-600">Are you sure you want to delete this customer?</h3>
+            <h3 className="mb-5 text-lg text-gray-600">
+              Are you sure you want to delete this customer?
+            </h3>
             <div className="flex justify-center space-x-4">
               <button
                 onClick={handleDeleteCustomer}

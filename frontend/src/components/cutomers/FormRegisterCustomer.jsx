@@ -33,7 +33,6 @@ const FormRegisterCustomer = ({
       [id]: id === "isCustomer" ? checked : value,
     }));
 
-    // Clear error message on input change
     setErrorMessage(null);
   };
 

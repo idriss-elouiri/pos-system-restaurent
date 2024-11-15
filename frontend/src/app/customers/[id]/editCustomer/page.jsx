@@ -1,11 +1,10 @@
-import EditCustomer from "@/components/cutomers/EditCustomer"
-import Layout from "@/components/Layout"
+import EditCustomer from "@/components/cutomers/EditCustomer";
+import Layout from "@/components/Layout";
 
-const editCustomer = () => {
-
+export default function editCustomer() {
   return (
-    <Layout><EditCustomer/></Layout>
-  )
+    <Layout>
+      <EditCustomer />
+    </Layout>
+  );
 }
-
-export default editCustomer

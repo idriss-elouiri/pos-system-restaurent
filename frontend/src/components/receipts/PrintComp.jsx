@@ -10,26 +10,27 @@ const PrintComp = () => {
   const [error, setError] = useState(null);
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
-
   useEffect(() => {
-    const getOrder = async () => {
-      try {
-        const res = await fetch(`${apiUrl}/api/order/${id}`);
-        const data = await res.json();
+    if (typeof window !== "undefined") {
+      const getOrder = async () => {
+        try {
+          const res = await fetch(`${apiUrl}/api/order/${id}`);
+          const data = await res.json();
 
-        if (!res.ok) {
-          throw new Error(data.message || "Failed to fetch Order data");
+          if (!res.ok) {
+            throw new Error(data.message || "Failed to fetch Order data");
+          }
+
+          setOrder(data);
+        } catch (err) {
+          setError(err.message);
+        } finally {
+          setLoading(false);
         }
-
-        setOrder(data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
+      };
+      if (id) {
+        getOrder();
       }
-    };
-    if (id) {
-      getOrder();
     }
   }, [id]);
 

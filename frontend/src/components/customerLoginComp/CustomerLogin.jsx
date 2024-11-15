@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React, { useState } from "react";
 import Link from "next/link";
@@ -10,13 +10,16 @@ import {
   signInFailure,
 } from "../../redux/user/userSlice";
 
-export default function StaffLogin() {
-  const [formData, setFormData] = useState({ emailStaff: "", passwordStaff: "" });
+export default function CustomerLoginComp() {
+  const [formData, setFormData] = useState({
+    emailCustomer: "",
+    passwordCustomer: "",
+  });
   const { loading, error: errorMessage } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const router = useRouter();
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-  
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
@@ -26,7 +29,7 @@ export default function StaffLogin() {
     e.preventDefault();
     dispatch(signInStart());
     try {
-      const res = await fetch(`${apiUrl}/api/hrm/loginStaff`, {
+      const res = await fetch(`${apiUrl}/api/customer/loginCustomer`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -34,15 +37,14 @@ export default function StaffLogin() {
       });
 
       const data = await res.json();
-      
+
       if (!res.ok || data.success === false) {
         dispatch(signInFailure(data.message));
         throw new Error(data.message || "Login failed. Please try again.");
-
       }
-      if(res.ok){
+      if (res.ok) {
         dispatch(signInSuccess(data));
-        router.push("/dashboard")
+        router.push("/dashboard");
       }
     } catch (error) {
       dispatch(signInFailure(error.message));
@@ -56,14 +58,17 @@ export default function StaffLogin() {
         <form className="space-y-4" onSubmit={handleSubmit}>
           {/* Email Field */}
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700"
+            >
               Email
             </label>
             <input
               type="email"
-              id="emailStaff"
-              name="emailStaff"
-              value={formData.email}
+              id="emailCustomer"
+              name="emailCustomer"
+              value={formData.emailCustomer}
               onChange={handleInputChange}
               className="w-full p-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
               placeholder="Enter your email"
@@ -72,14 +77,17 @@ export default function StaffLogin() {
 
           {/* Password Field */}
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-700"
+            >
               Password
             </label>
             <input
               type="password"
-              id="passwordStaff"
-              name="passwordStaff"
-              value={formData.password}
+              id="passwordCustomer"
+              name="passwordCustomer"
+              value={formData.passwordCustomer}
               onChange={handleInputChange}
               className="w-full p-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
               placeholder="Enter your password"
@@ -89,7 +97,10 @@ export default function StaffLogin() {
           {/* Register Link */}
           <p className="text-sm text-center text-gray-500 my-2">
             Don't have an account?{" "}
-            <Link href="/adminRegister" className="text-indigo-600 hover:underline">
+            <Link
+              href="/adminRegister"
+              className="text-indigo-600 hover:underline"
+            >
               Register here
             </Link>
           </p>

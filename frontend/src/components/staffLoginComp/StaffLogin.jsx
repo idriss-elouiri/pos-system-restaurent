@@ -10,10 +10,10 @@ import {
   signInFailure,
 } from "../../redux/user/userSlice";
 
-export default function CustomerLogin() {
+export default function StaffLoginComp() {
   const [formData, setFormData] = useState({
-    emailCustomer: "",
-    passwordCustomer: "",
+    emailStaff: "",
+    passwordStaff: "",
   });
   const { loading, error: errorMessage } = useSelector((state) => state.user);
   const dispatch = useDispatch();
@@ -29,7 +29,7 @@ export default function CustomerLogin() {
     e.preventDefault();
     dispatch(signInStart());
     try {
-      const res = await fetch(`${apiUrl}/api/customer/loginCustomer`, {
+      const res = await fetch(`${apiUrl}/api/hrm/loginStaff`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -66,9 +66,9 @@ export default function CustomerLogin() {
             </label>
             <input
               type="email"
-              id="emailCustomer"
-              name="emailCustomer"
-              value={formData.emailCustomer}
+              id="emailStaff"
+              name="emailStaff"
+              value={formData.email}
               onChange={handleInputChange}
               className="w-full p-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
               placeholder="Enter your email"
@@ -85,9 +85,9 @@ export default function CustomerLogin() {
             </label>
             <input
               type="password"
-              id="passwordCustomer"
-              name="passwordCustomer"
-              value={formData.passwordCustomer}
+              id="passwordStaff"
+              name="passwordStaff"
+              value={formData.password}
               onChange={handleInputChange}
               className="w-full p-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
               placeholder="Enter your password"
