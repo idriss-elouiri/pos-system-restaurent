@@ -1,3 +1,11 @@
-export default function AdminLogin() {
-  // الكود الخاص بالصفحة
+"use client";
+
+import AdminLoginComp from "@/components/adminRegistiration/AdminLogin";
+
+export default function Adminlogin() {
+  return (
+    <>
+      <AdminLoginComp />
+    </>
+  );
 }
