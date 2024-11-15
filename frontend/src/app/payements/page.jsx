@@ -1,13 +1,10 @@
-"use client";
-
 import Layout from "@/components/Layout";
-import Payement from "@/components/payement/Payement";
-import React from "react";
+import Payment from "@/components/payement/Payement";
 
 export default function payementForm() {
   return (
     <Layout>
-      <Payement />
+      <Payment />
     </Layout>
   );
 }

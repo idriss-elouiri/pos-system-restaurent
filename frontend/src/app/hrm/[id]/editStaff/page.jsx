@@ -1,5 +1,3 @@
-"use client";
-
 import EditStaff from "@/components/hrm/EditStaff";
 import Layout from "@/components/Layout";
 

@@ -3,7 +3,6 @@
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { FaPaypal, FaTrash } from "react-icons/fa";
-import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 
