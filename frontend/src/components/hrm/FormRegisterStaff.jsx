@@ -1,6 +1,15 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytesResumable,
+} from "firebase/storage";
+import { app } from "../../firebase";
+import { CircularProgressbar } from "react-circular-progressbar";
+import "react-circular-progressbar/dist/styles.css";
 import { useRouter } from "next/navigation";
 import { HiOutlineUserAdd } from "react-icons/hi";
 
@@ -15,7 +24,6 @@ const FormRegisterStaff = ({
   const [errorMessage, setErrorMessage] = useState(null);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   const [formData, setFormData] = useState({
     profilePictureStaff:
       existingProfilePictureStaff ||
@@ -25,7 +33,64 @@ const FormRegisterStaff = ({
     numberStaff: existingNumber || `STF-${Date.now().toString().slice(-6)}`,
     isStaff: existingIsStaff || false,
   });
+  const [imageFile, setImageFile] = useState(null);
+  const [imageFileUrl, setImageFileUrl] = useState(null);
+  const [imageFileUploadProgress, setImageFileUploadProgress] = useState(null);
+  const [imageFileUploadError, setImageFileUploadError] = useState(null);
+  const [imageFileUploading, setImageFileUploading] = useState(false);
+  const filePickerRef = useRef();
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImageFile(file);
+      setImageFileUrl(URL.createObjectURL(file));
+    }
+  };
+
+  useEffect(() => {
+    if (imageFile) {
+      uploadImage();
+    }
+  }, [imageFile]);
+
+  const uploadImage = async () => {
+    if (typeof window === "undefined") return; // Prevent SSR issues
+
+    setImageFileUploading(true);
+    setImageFileUploadError(null);
+
+    const storage = getStorage(app);
+    const fileName = new Date().getTime() + imageFile.name;
+    const storageRef = ref(storage, fileName);
+    const uploadTask = uploadBytesResumable(storageRef, imageFile);
+
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        const progress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        setImageFileUploadProgress(progress.toFixed(0));
+      },
+      (error) => {
+        setImageFileUploadError(
+          "Could not upload image (File must be less than 2MB)"
+        );
+        setImageFileUploadProgress(null);
+        setImageFile(null);
+        setImageFileUrl(null);
+        setImageFileUploading(false);
+      },
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          setImageFileUrl(downloadURL);
+          setFormData({ ...formData, profilePictureStaff: downloadURL });
+          setImageFileUploading(false);
+        });
+      }
+    );
+  };
   const handleInputChange = (e) => {
     const { id, value, checked } = e.target;
     setFormData((prev) => ({
@@ -37,7 +102,11 @@ const FormRegisterStaff = ({
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
+    if (formData.passwordStaff.length < 6) {
+      setErrorMessage("كلمة المرور يجب أن تكون أكثر من 6 أحرف");
+      setLoading(false); // Reset loading state
+      return; // Exit early
+    }
     const url = _id
       ? `${apiUrl}/api/user/adminUpdateStaff/${_id}`
       : `${apiUrl}/api/hrm/registerStaff`;
@@ -71,6 +140,54 @@ const FormRegisterStaff = ({
           {_id ? "Edit Staff" : "Register Staff"}
         </h2>
         <form className="space-y-5" onSubmit={handleSubmit}>
+          {/* Image Upload */}
+          <div className="flex justify-center">
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              ref={filePickerRef}
+              hidden
+            />
+            <div
+              className="relative w-24 h-24 cursor-pointer shadow-md overflow-hidden rounded-full"
+              onClick={() => filePickerRef.current.click()}
+            >
+              {imageFileUploadProgress && (
+                <CircularProgressbar
+                  value={imageFileUploadProgress || 0}
+                  text={`${imageFileUploadProgress}%`}
+                  strokeWidth={5}
+                  styles={{
+                    root: {
+                      width: "100%",
+                      height: "100%",
+                      position: "absolute",
+                    },
+                    path: {
+                      stroke: `rgba(62, 152, 199, ${
+                        imageFileUploadProgress / 100
+                      })`,
+                    },
+                  }}
+                />
+              )}
+              <img
+                src={imageFileUrl || formData.profilePictureStaff}
+                alt="Employé"
+                className={`w-32 h-32 rounded-full w-full h-full object-cover border-4 border-gray-300 ${
+                  imageFileUploadProgress &&
+                  imageFileUploadProgress < 100 &&
+                  "opacity-60"
+                }`}
+              />
+            </div>
+          </div>
+          {imageFileUploadError && (
+            <p className="text-red-500 text-sm text-center mt-2">
+              {imageFileUploadError}
+            </p>
+          )}
           {/* Number Field */}
           <div>
             <label
