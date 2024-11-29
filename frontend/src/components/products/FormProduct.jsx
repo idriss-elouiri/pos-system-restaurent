@@ -17,6 +17,7 @@ const FormProduct = ({
   productImage: existingImage,
   productPrice: existingPrice,
   productDescription: existingDescription,
+  productQty: existingProductQty,
 }) => {
   const [formData, setFormData] = useState({
     productName: existingName || "",
@@ -24,6 +25,7 @@ const FormProduct = ({
     productImage: existingImage || "",
     productPrice: existingPrice || "",
     productDescription: existingDescription || "",
+    productQty: existingProductQty || "",
   });
   const [imageFile, setImageFile] = useState(null);
   const [imageFileUrl, setImageFileUrl] = useState(existingImage || null);
@@ -105,10 +107,11 @@ const FormProduct = ({
     // Optionally reset the form state here
     setFormData({
       productName: "",
-      productCode: `PRD-${Date.now().toString().slice(-6)}`,
+      productCode: "",
       productImage: "",
-      productPrice: 0,
+      productPrice: "",
       productDescription: "",
+      productQty: "",
     });
     router.push("/products");
   };
@@ -116,15 +119,15 @@ const FormProduct = ({
   return (
     <div className="max-w-3xl mx-auto min-h-screen px-4 py-6">
       <h1 className="text-center text-2xl md:text-3xl my-5 font-semibold">
-        Create a Product
+        انشاء بضاعة جديدة
       </h1>
       <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
         <label htmlFor="productName" className="sr-only">
-          Product Name
+          اسم البضاعة
         </label>
         <input
           type="text"
-          placeholder="Product Name"
+          placeholder="اسم البضاعة"
           required
           id="productName"
           className="border border-gray-300 p-2 rounded w-full"
@@ -132,11 +135,11 @@ const FormProduct = ({
           value={formData.productName}
         />
         <label htmlFor="productCode" className="sr-only">
-          Product Code
+          كود البضاعة
         </label>
         <input
           type="text"
-          placeholder="Product Code"
+          placeholder="كود البضاعة"
           id="productCode"
           readOnly
           className="border border-gray-300 p-2 rounded w-full"
@@ -156,12 +159,12 @@ const FormProduct = ({
             disabled={imageFileUploadProgress !== null}
             className="p-2 bg-green-600 text-white rounded"
           >
-            {imageFileUploadProgress ? "Uploading..." : "Upload Image"}
+            {imageFileUploadProgress ? "تحميل..." : "حمل الصورة"}
           </button>
         </div>
-        {imageFileUrl && (
+        {formData.productImage && (
           <img
-            src={imageFileUrl}
+            src={formData.productImage}
             alt="Product Preview"
             className="w-40 h-40 mt-2"
           />
@@ -170,21 +173,21 @@ const FormProduct = ({
           <p className="text-red-500">{imageFileUploadError}</p>
         )}
         <label htmlFor="productDescription" className="sr-only">
-          Product Description
+          وصف البضاعة
         </label>
         <textarea
-          placeholder="Product Description"
+          placeholder="وصف البضاعة"
           id="productDescription"
           onChange={handleInputChange}
           value={formData.productDescription}
           className="border border-gray-300 p-2 rounded w-full"
         />
         <label htmlFor="productPrice" className="sr-only">
-          Price
+          السعر 
         </label>
         <input
           type="text"
-          placeholder="Price"
+          placeholder="السعر"
           required
           id="productPrice"
           className="border border-gray-300 p-2 rounded w-full"
@@ -192,12 +195,25 @@ const FormProduct = ({
           value={formData.productPrice}
           min="0"
         />
+        <label htmlFor="productPrice" className="sr-only">
+          اجمالي البضاعة
+        </label>
+        <input
+          type="text"
+          placeholder="اجمالي البضاعة"
+          required
+          id="productQty"
+          className="border border-gray-300 p-2 rounded w-full"
+          onChange={handleInputChange}
+          value={formData.productQty}
+          min="1"
+        />
         <button
           type="submit"
           disabled={loading}
           className="p-2 bg-green-600 text-white rounded"
         >
-          {loading ? "Publishing..." : "Publish"}
+          {loading ? "يتم النشر..." : "نشر"}
         </button>
       </form>
     </div>

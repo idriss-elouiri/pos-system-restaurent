@@ -91,7 +91,7 @@ const Products = () => {
   };
 
   if (loading) {
-    return <div className="text-center">Loading products...</div>; // Loading state UI
+    return <div className="text-center">تحميل البضاعة...</div>; // Loading state UI
   }
 
   return (
@@ -101,7 +101,7 @@ const Products = () => {
         className="mb-4 inline-flex items-center px-4 py-2 border border-green-500 text-green-500 rounded-md hover:bg-green-500 hover:text-white"
       >
         <FaRegUser className="mr-2" />
-        Add New Product
+       اضافة بضاعة جديدة
       </Link>
 
       {isAdmin || isStaff ? (
@@ -110,11 +110,11 @@ const Products = () => {
             <table className="min-w-full text-sm bg-white border border-gray-200 shadow rounded-lg">
               <thead className="bg-gray-100">
                 <tr>
-                  <th className="px-4 py-2 text-left">Image</th>
-                  <th className="px-4 py-2 text-left">Product Code</th>
-                  <th className="px-4 py-2 text-left">Name</th>
-                  <th className="px-4 py-2 text-left">Price</th>
-                  <th className="px-4 py-2 text-center">Actions</th>
+                  <th className="px-4 py-2 text-left">صورة البضاعة</th>
+                  <th className="px-4 py-2 text-left">كود</th>
+                  <th className="px-4 py-2 text-left">اسم البضاعة</th>
+                  <th className="px-4 py-2 text-left">سعر البضاعة</th>
+                  <th className="px-4 py-2 text-center">الحركات</th>
                 </tr>
               </thead>
               <tbody>
@@ -139,7 +139,7 @@ const Products = () => {
                         className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded flex items-center"
                       >
                         <HiPencilAlt className="mr-1" />
-                        Edit
+                        تعديل
                       </button>
                       <button
                         onClick={() => {
@@ -149,7 +149,7 @@ const Products = () => {
                         className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded flex items-center"
                       >
                         <FaTrash className="mr-1" />
-                        Delete
+                        حذف
                       </button>
                     </td>
                   </tr>
