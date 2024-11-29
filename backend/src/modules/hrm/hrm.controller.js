@@ -6,12 +6,11 @@ import Customer from "../customers/customer.models.js";
 
 // Handler for staff registration
 export const registerStaffHandler = async (req, res, next) => {
-  const { nameStaff, emailStaff, passwordStaff, numberStaff, isStaff } =
-    req.body;
+  const { nameStaff, passwordStaff, numberStaff, isStaff } = req.body;
 
   try {
     // Validate input fields before proceeding
-    if (!nameStaff || !emailStaff || !passwordStaff) {
+    if (!nameStaff || !passwordStaff) {
       return next(errorHandler(400, "Name, email, and password are required."));
     }
 
@@ -20,7 +19,6 @@ export const registerStaffHandler = async (req, res, next) => {
 
     const newStaff = new Staff({
       nameStaff,
-      emailStaff,
       passwordStaff: hashedPassword,
       numberStaff,
       isStaff,
@@ -35,10 +33,10 @@ export const registerStaffHandler = async (req, res, next) => {
 
 // Handler for staff login
 export const loginStaffHandler = async (req, res, next) => {
-  const { emailStaff, passwordStaff } = req.body;
+  const { nameStaff, passwordStaff } = req.body;
 
   try {
-    const validStaff = await Staff.findOne({ emailStaff });
+    const validStaff = await Staff.findOne({ nameStaff });
     if (!validStaff) {
       return next(errorHandler(404, "Staff not found"));
     }
@@ -180,15 +178,7 @@ export const getStaff = async (req, res, next) => {
 };
 
 export const updateCustomer = async (req, res, next) => {
- 
   try {
-    const { passwordCustomer } = req.body;
-
-    // Hash password only if it's provided
-    if (passwordCustomer) {
-      req.body.passwordCustomer = bcryptjs.hashSync(passwordCustomer, 10);
-    }
-
     const updatedCustomer = await Customer.findByIdAndUpdate(
       req.params.CustomerId,
       { $set: { ...req.body } }, // Use spread operator to update all fields
@@ -197,12 +187,11 @@ export const updateCustomer = async (req, res, next) => {
 
     // Check if staff was found
     if (!updatedCustomer) {
-      return next(errorHandler(404, "Customer not found"));
+      return next(errorHandler(404, "العميل غير موجود"));
     }
 
     // Omit password from response
-    const { passwordCustomer: pass, ...rest } = updatedCustomer._doc;
-    res.status(200).json(rest);
+    res.status(200).json("معلومات العميل عدلت بنجاح");
   } catch (error) {
     next(error);
   }
@@ -214,11 +203,11 @@ export const deleteCustomer = async (req, res, next) => {
       req.params.CustomerId
     );
     if (!deletedCustomer) {
-      return next(errorHandler(404, "Customer not found"));
+      return next(errorHandler(404, "العميل غير موجود"));
     }
-    res.status(200).json({ message: "Customer has been deleted" });
+    res.status(200).json({ message: "العميل حذف بنجاح" });
   } catch (error) {
-    console.error("Error deleting customer:", error); // Log error for debugging
+    console.error("خطا في حذف العميل:", error); // Log error for debugging
     next(error);
   }
 };

@@ -2,31 +2,24 @@ import mongoose from "mongoose";
 
 const customerSchema = new mongoose.Schema(
   {
-    nameCustomer: {
-      type: String,
-      required: true,
-    },
-    emailCustomer: {
-      type: String,
-      required: true,
-      unique: true,
-    },
-    passwordCustomer: { 
-      type: String,
-      required: true,
-    },
     profilePictureCustomer: {
       type: String,
       default:
         "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png",
     },
-    phoneNumberCustomer:{
+    nameCustomer: {
       type: String,
       required: true,
     },
-    isCustomer: {
-      type: Boolean,
-      default: false,
+    address: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    contact: {
+      type: String,
+      required: true,
+      unique: true,
     },
   },
   { timestamps: true }

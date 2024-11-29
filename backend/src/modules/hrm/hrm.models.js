@@ -6,11 +6,6 @@ const staffSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    emailStaff: {
-      type: String,
-      required: true,
-      unique: true,
-    },
     passwordStaff: {
       type: String,
       required: true,
@@ -28,7 +23,6 @@ const staffSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-  
   },
   { timestamps: true }
 );
