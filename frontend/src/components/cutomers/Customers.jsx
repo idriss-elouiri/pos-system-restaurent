@@ -88,20 +88,20 @@ const CustomerComp = () => {
 
   return (
     <div className="w-full px-4 md:px-10 lg:px-20 py-8 bg-gray-50">
-      <div className="flex justify-between items-center w-full h-full">
+      <div className="flex justify-between items-center w-full min-h-full">
         <Link
           href="/customers/newCustomer"
           className="flex items-center gap-2 p-2 border-2 font-semibold border-green-600 rounded text-green-600 mb-4"
         >
           <FaRegUser />
-          <span>Add New Customer</span>
+          <span>اضافة عميل جديد</span>
         </Link>
         {showMore && (
           <button
             onClick={handleShowMore}
             className="bg-indigo-600 text-white px-4 py-2 rounded"
           >
-            See All Orders
+            See All Customers
           </button>
         )}
       </div>
@@ -115,25 +115,25 @@ const CustomerComp = () => {
           <table className="min-w-full border bg-white shadow-md rounded-lg text-center">
             <thead className="bg-gray-200">
               <tr>
-                <th className="px-4 py-2">NAME</th>
-                <th className="px-4 py-2">CUSTOMER PHONE NUMBER</th>
-                <th className="px-4 py-2">EMAIL</th>
-                <th className="px-4 py-2">ACTIONS</th>
+                <th className="px-4 py-2">اسم العميل</th>
+                <th className="px-4 py-2">عنوان العميل</th>
+                <th className="px-4 py-2">رقم العميل</th>
+                <th className="px-4 py-2">الحركات</th>
               </tr>
             </thead>
             <tbody>
               {customers.map((customer) => (
                 <tr key={customer._id} className="border-b last:border-none">
                   <td className="px-4 py-3">{customer.nameCustomer}</td>
-                  <td className="px-4 py-3">{customer.phoneNumberCustomer}</td>
-                  <td className="px-4 py-3">{customer.emailCustomer}</td>
+                  <td className="px-4 py-3">{customer.contact}</td>
+                  <td className="px-4 py-3">{customer.address}</td>
                   <td className="px-4 py-3 flex justify-center space-x-2">
                     <button
                       onClick={() => handleEditClick(customer._id)}
                       aria-label={`Edit ${customer.nameCustomer}`}
                       className="flex items-center space-x-1 px-3 py-1 bg-green-500 text-white rounded-lg hover:bg-green-600"
                     >
-                      <HiPencilAlt /> <span>Edit</span>
+                      <HiPencilAlt /> <span>تعديل</span>
                     </button>
                     <button
                       onClick={() => {
@@ -143,7 +143,7 @@ const CustomerComp = () => {
                       aria-label={`Delete ${customer.nameCustomer}`}
                       className="flex items-center space-x-1 px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600"
                     >
-                      <FaTrash /> <span>Delete</span>
+                      <FaTrash /> <span>حذف</span>
                     </button>
                   </td>
                 </tr>

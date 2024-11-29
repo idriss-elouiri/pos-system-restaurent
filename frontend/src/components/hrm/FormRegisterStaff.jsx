@@ -6,8 +6,8 @@ import { HiOutlineUserAdd } from "react-icons/hi";
 
 const FormRegisterStaff = ({
   _id,
+  profilePictureStaff: existingProfilePictureStaff,
   nameStaff: existingName,
-  emailStaff: existingEmail,
   numberStaff: existingNumber,
   passwordStaff: existingPassword,
   isStaff: existingIsStaff,
@@ -17,8 +17,10 @@ const FormRegisterStaff = ({
   const router = useRouter();
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   const [formData, setFormData] = useState({
+    profilePictureStaff:
+      existingProfilePictureStaff ||
+      "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png",
     nameStaff: existingName || "",
-    emailStaff: existingEmail || "",
     passwordStaff: existingPassword || "",
     numberStaff: existingNumber || `STF-${Date.now().toString().slice(-6)}`,
     isStaff: existingIsStaff || false,
@@ -75,7 +77,7 @@ const FormRegisterStaff = ({
               htmlFor="numberStaff"
               className="block text-sm font-medium text-gray-700"
             >
-              Staff Number
+              رقم الموظف
             </label>
             <input
               type="text"
@@ -91,7 +93,7 @@ const FormRegisterStaff = ({
               htmlFor="nameStaff"
               className="block text-sm font-medium text-gray-700"
             >
-              Staff Name <span className="text-red-500">*</span>
+              اسم الموظف <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
@@ -104,32 +106,13 @@ const FormRegisterStaff = ({
             />
           </div>
 
-          {/* Email Field */}
-          <div>
-            <label
-              htmlFor="emailStaff"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Staff Email <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="email"
-              id="emailStaff"
-              value={formData.emailStaff}
-              onChange={handleInputChange}
-              className="w-full p-2 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              placeholder="Enter staff email"
-              required
-            />
-          </div>
-
           {/* Password Field */}
           <div>
             <label
               htmlFor="passwordStaff"
               className="block text-sm font-medium text-gray-700"
             >
-              Staff Password <span className="text-red-500">*</span>
+              كلمة السر <span className="text-red-500">*</span>
             </label>
             <input
               type="password"
@@ -149,7 +132,10 @@ const FormRegisterStaff = ({
               onChange={handleInputChange}
               className="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-2 focus:ring-indigo-500"
             />
-            <label htmlFor="isStaff" className="text-sm font-medium text-gray-700">
+            <label
+              htmlFor="isStaff"
+              className="text-sm font-medium text-gray-700"
+            >
               Is Staff
             </label>
           </div>
