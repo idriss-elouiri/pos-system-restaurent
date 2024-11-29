@@ -6,7 +6,13 @@ import Customer from "../customers/customer.models.js";
 
 // Handler for staff registration
 export const registerStaffHandler = async (req, res, next) => {
-  const { nameStaff, passwordStaff, numberStaff, isStaff } = req.body;
+  const {
+    profilePictureStaff,
+    nameStaff,
+    passwordStaff,
+    numberStaff,
+    isStaff,
+  } = req.body;
 
   try {
     // Validate input fields before proceeding
@@ -18,6 +24,7 @@ export const registerStaffHandler = async (req, res, next) => {
     const hashedPassword = bcryptjs.hashSync(passwordStaff, 10);
 
     const newStaff = new Staff({
+      profilePictureStaff,
       nameStaff,
       passwordStaff: hashedPassword,
       numberStaff,
