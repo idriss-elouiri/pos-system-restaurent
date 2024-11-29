@@ -8,5 +8,6 @@ export const productShcema = z.object({
     .string({ required_error: "productImage is required" }),
     productPrice: z.string({ required_error: "productPrice is required" }),
     productDescription: z.string({ required_error: "productDescription is required" }),
+    productQty: z.string({ required_error: "productQty is required" }),
 
 });

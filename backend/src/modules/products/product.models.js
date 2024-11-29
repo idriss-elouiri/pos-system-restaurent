@@ -24,6 +24,10 @@ const productSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    productQty: {
+      type: String,
+      required: true,
+    },
   },
   { timestamps: true }
 );
