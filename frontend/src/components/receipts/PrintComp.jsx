@@ -44,10 +44,10 @@ const PrintComp = () => {
     <div className="min-h-screen p-6 flex items-center justify-center bg-white">
       <div className="max-w-lg w-full bg-white shadow-lg rounded-lg p-6">
         <h1 className="text-2xl font-bold text-center text-indigo-600 mb-6">
-          Order Receipt
+          توصيل الطلب
         </h1>
 
-        {loading && <p className="text-center text-gray-700">Loading...</p>}
+        {loading && <p className="text-center text-gray-700">تحميل...</p>}
 
         {error && <p className="text-center text-red-500">{error}</p>}
 
@@ -55,22 +55,24 @@ const PrintComp = () => {
           <>
             <div className="mb-6">
               <p className="text-center text-gray-700">
-                Order Code: {order?.orderCode}
+                كود الطلب: {order?.orderCode}
               </p>
             </div>
             <div>
               <table className="w-full border border-gray-200">
                 <thead>
                   <tr className="bg-gray-100">
-                    <th className="text-left p-2 border-b">Item</th>
-                    <th className="text-left p-2 border-b">Qty</th>
-                    <th className="text-left p-2 border-b">Price</th>
-                    <th className="text-left p-2 border-b">Total</th>
+                    <th className="text-left p-2 border-b">اسم الزبون</th>
+                    <th className="text-left p-2 border-b"> اسم البضاعة</th>
+                    <th className="text-left p-2 border-b">الكمية</th>
+                    <th className="text-left p-2 border-b">سعر البضاعة</th>
+                    <th className="text-left p-2 border-b">السعر الاجمالي</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr key={id} className="border-b">
                     <td className="p-2">{order?.customerName}</td>
+                    <td className="p-2">{order?.productName}</td>
                     <td className="p-2">{order?.productQty}</td>
                     <td className="p-2">${order?.productPrice}</td>
                     <td className="p-2">
@@ -85,7 +87,7 @@ const PrintComp = () => {
                 onClick={handlePrint}
                 className="px-6 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 focus:outline-none focus:ring focus:ring-indigo-300"
               >
-                Print Receipt
+                اطبع الطلب
               </button>
             </div>
           </>

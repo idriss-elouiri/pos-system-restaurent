@@ -9,15 +9,15 @@ const OrdersTable = ({ orders }) => {
     <table className="w-full text-left">
       <thead>
         <tr className="bg-gray-100">
-          <th className="py-2 px-4">Code</th>
-          <th className="py-2 px-4">Customer</th>
-          <th className="py-2 px-4">Product</th>
-          <th className="py-2 px-4">Price</th>
-          <th className="py-2 px-4">Qty</th>
-          <th className="py-2 px-4">Total</th>
-          <th className="py-2 px-4">Status</th>
-          <th className="py-2 px-4">Date</th>
-          <th className="py-2 px-4">Actions</th>
+          <th className="py-2 px-4">كود الطلب</th>
+          <th className="py-2 px-4">اسم الزبون</th>
+          <th className="py-2 px-4">اسم البضاعة</th>
+          <th className="py-2 px-4">سعر البضاعة</th>
+          <th className="py-2 px-4">كمية البضاعة</th>
+          <th className="py-2 px-4">السعر الاجمالي</th>
+          <th className="py-2 px-4">الحالة</th>
+          <th className="py-2 px-4">التاريخ</th>
+          <th className="py-2 px-4">الطباعة</th>
         </tr>
       </thead>
       <tbody>
@@ -32,15 +32,21 @@ const OrdersTable = ({ orders }) => {
               ${(order.productQty * order.productPrice).toFixed(2)}
             </td>
             <td className="py-2 px-4">
-              <span className={`p-2 rounded ${order.isPaid ? 'bg-green-500' : 'bg-red-500'} text-white`}>
-                {order.isPaid ? 'Paid' : 'Not Paid'}
+              <span
+                className={`p-2 rounded ${
+                  order.isPaid ? "bg-green-500" : "bg-red-500"
+                } text-white`}
+              >
+                {order.isPaid ? "Paid" : "Not Paid"}
               </span>
             </td>
-            <td className="py-2 px-4">{new Date(order.createdAt).toLocaleDateString()}</td>
+            <td className="py-2 px-4">
+              {new Date(order.createdAt).toLocaleDateString()}
+            </td>
             <td>
               <Link href={`/receipts/${order._id}/print`}>
                 <button className="px-6 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 focus:outline-none focus:ring focus:ring-indigo-300">
-                  Print Receipt
+                  طباعة التوصيل
                 </button>
               </Link>
             </td>
@@ -68,8 +74,14 @@ const ReceiptComp = () => {
       try {
         setLoading(true);
         const [ordersRes, customerOrdersRes] = await Promise.all([
-          fetch(`${apiUrl}/api/order/getorders`, { method: "GET", credentials: "include" }),
-          fetch(`${apiUrl}/api/order/getCustomerOrder/${currentUser._id}`, { method: "GET", credentials: "include" }),
+          fetch(`${apiUrl}/api/order/getorders`, {
+            method: "GET",
+            credentials: "include",
+          }),
+          fetch(`${apiUrl}/api/order/getCustomerOrder/${currentUser._id}`, {
+            method: "GET",
+            credentials: "include",
+          }),
         ]);
 
         const ordersData = await ordersRes.json();
@@ -95,7 +107,9 @@ const ReceiptComp = () => {
   const handleShowMore = async () => {
     const startIndex = orders.length;
     try {
-      const res = await fetch(`${apiUrl}/api/order/getorders?startIndex=${startIndex}`);
+      const res = await fetch(
+        `${apiUrl}/api/order/getorders?startIndex=${startIndex}`
+      );
       const data = await res.json();
       if (res.ok) {
         setOrders((prev) => [...prev, ...data.orders]);
@@ -106,15 +120,18 @@ const ReceiptComp = () => {
     }
   };
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <p>تحميل...</p>;
 
   return (
     <section className="my-6 bg-white p-4 rounded-lg shadow-lg">
       <div className="flex justify-between items-center w-full h-full">
-        <h2 className="text-xl font-semibold mb-4">Recent Orders</h2>
+        <h2 className="text-xl font-semibold mb-4">الطلبات الأخيرة</h2>
         {showMore && (
-          <button onClick={handleShowMore} className="bg-indigo-600 text-white px-4 py-2 rounded">
-            See All Orders
+          <button
+            onClick={handleShowMore}
+            className="bg-indigo-600 text-white px-4 py-2 rounded"
+          >
+            انظر لجميع الطلبات
           </button>
         )}
       </div>

@@ -74,19 +74,19 @@ const Orders = () => {
               <thead className="bg-gray-200">
                 <tr className="text-gray-700">
                   <th scope="col" className="px-4 py-2 border">
-                    IMAGE
+                    صورة البضاعة
                   </th>
                   <th scope="col" className="px-4 py-2 border">
-                    PRODUCT CODE
+                    كود البضاعة
                   </th>
                   <th scope="col" className="px-4 py-2 border">
-                    NAME
+                    اسم البضاعة
                   </th>
                   <th scope="col" className="px-4 py-2 border">
-                    PRICE
+                    سعر البضاعة
                   </th>
                   <th scope="col" className="px-4 py-2 border">
-                    ACTIONS
+                    الحركات
                   </th>
                 </tr>
               </thead>
@@ -114,7 +114,7 @@ const Orders = () => {
                         className="flex justify-center items-center gap-2 bg-orange-600 text-white rounded py-1 px-3 hover:bg-orange-700"
                       >
                         <FaShoppingCart />
-                        <span>Place Order</span>
+                        <span>اعمل طلب</span>
                       </button>
                     </td>
                   </tr>

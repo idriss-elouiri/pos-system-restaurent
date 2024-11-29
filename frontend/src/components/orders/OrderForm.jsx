@@ -102,6 +102,14 @@ const OrderForm = () => {
       if (!res.ok) {
         throw new Error(data.message || "An error occurred");
       }
+      setFormData({
+        customerName: "",
+        customerId: "",
+        orderCode: "",
+        productName: "",
+        productPrice: null,
+        productQty: "",
+      });
       router.push("/orders");
     } catch (err) {
       setErrorMessage(err.message);
@@ -130,7 +138,7 @@ const OrderForm = () => {
               htmlFor="customerName"
               className="block text-sm font-medium text-gray-700"
             >
-              Customer Name
+              اختر الزبون
             </label>
             <select
               id="customerName"
@@ -139,7 +147,7 @@ const OrderForm = () => {
               className="w-full px-3 py-2 mt-1 border rounded-md focus:outline-none focus:ring focus:ring-indigo-200"
               required
             >
-              <option value="">Select Customer</option>
+              <option value="">اختر الزبون</option>
               {customers.map((customer) => (
                 <option key={customer._id} value={customer.nameCustomer}>
                   {customer.nameCustomer}
@@ -154,7 +162,7 @@ const OrderForm = () => {
               htmlFor="customerId"
               className="block text-sm font-medium text-gray-700"
             >
-              Customer ID
+              تبع الزبون id
             </label>
             <input
               type="text"
@@ -171,7 +179,7 @@ const OrderForm = () => {
               htmlFor="orderCode"
               className="block text-sm font-medium text-gray-700"
             >
-              Order Code
+              كود الطلب
             </label>
             <input
               type="text"
@@ -188,7 +196,7 @@ const OrderForm = () => {
               htmlFor="productPrice"
               className="block text-sm font-medium text-gray-700"
             >
-              Price
+              سعر الطلب
             </label>
             <input
               type="number"
@@ -205,7 +213,7 @@ const OrderForm = () => {
               htmlFor="productQty"
               className="block text-sm font-medium text-gray-700"
             >
-              Quantity
+              كمية الطلب
             </label>
             <input
               type="number"
@@ -223,7 +231,7 @@ const OrderForm = () => {
               type="submit"
               className="w-full px-4 py-2 text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             >
-              {loading ? "Submitting..." : "Submit Order"}
+              {loading ? "جاري الحفظ..." : "حفظ الطلب"}
             </button>
           </div>
         </form>

@@ -73,7 +73,7 @@ const PaymentForm = () => {
     }
   }, [id]);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <div>تحميل...</div>;
   if (error) return <div className="text-red-500">{error}</div>;
 
   return (
@@ -83,7 +83,7 @@ const PaymentForm = () => {
         className="w-full max-w-md p-6 space-y-4 bg-white shadow-lg rounded-lg"
       >
         <h2 className="text-2xl font-bold text-center text-gray-700">
-          Payment Form
+          نموذج الدفع
         </h2>
 
         {/* Payment ID */}
@@ -92,7 +92,7 @@ const PaymentForm = () => {
             htmlFor="paymentId"
             className="block text-sm font-medium text-gray-700"
           >
-            Payment ID
+            معرف الدفع
           </label>
           <input
             type="text"
@@ -109,7 +109,7 @@ const PaymentForm = () => {
             htmlFor="paymentCode"
             className="block text-sm font-medium text-gray-700"
           >
-            Payment Code
+            كود الدفع
           </label>
           <input
             type="text"
@@ -126,7 +126,7 @@ const PaymentForm = () => {
             htmlFor="orderCode"
             className="block text-sm font-medium text-gray-700"
           >
-            Order Code
+            كود الطلب
           </label>
           <input
             type="text"
@@ -143,7 +143,7 @@ const PaymentForm = () => {
             htmlFor="amount"
             className="block text-sm font-medium text-gray-700"
           >
-            Amount
+            سعر الطلب الاجمالي
           </label>
           <input
             type="number"
@@ -162,7 +162,7 @@ const PaymentForm = () => {
             htmlFor="paymentMethod"
             className="block text-sm font-medium text-gray-700"
           >
-            Payment Method
+            وسيلة الدفع
           </label>
           <select
             id="paymentMethod"

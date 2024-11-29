@@ -134,7 +134,7 @@ const Payment = () => {
         href={"/orders"}
         className="p-2 border-2 font-semibold my-3 border-green-600 rounded text-green-600 flex justify-center items-center w-fit"
       >
-        +<p>Add New Order</p>
+        +<p>اعمل طلب جديد</p>
       </Link>
       {errorMessage && <p className="text-red-500">{errorMessage}</p>}
       {(isAdmin || isStaff) && (
@@ -142,12 +142,12 @@ const Payment = () => {
           <table className="min-w-full border-collapse bg-white shadow-md rounded-lg overflow-hidden">
             <thead className="bg-gray-200">
               <tr>
-                <th className="px-4 py-2 text-left">CODE</th>
-                <th className="px-4 py-2 text-left">CUSTOMER</th>
-                <th className="px-4 py-2 text-left">PRODUCT</th>
-                <th className="px-4 py-2 text-left">TOTAL PRICE</th>
-                <th className="px-4 py-2 text-left">DATE</th>
-                <th className="px-4 py-2 text-left">ACTIONS</th>
+                <th className="px-4 py-2 text-left">كود الطلب</th>
+                <th className="px-4 py-2 text-left">اسم الزبون</th>
+                <th className="px-4 py-2 text-left">اسم البضاعة</th>
+                <th className="px-4 py-2 text-left">السعر الاجمالي</th>
+                <th className="px-4 py-2 text-left">تاريخ الطلب</th>
+                <th className="px-4 py-2 text-left">الحركات</th>
               </tr>
             </thead>
             <tbody className="divide-y">
@@ -165,7 +165,7 @@ const Payment = () => {
                       className="flex items-center gap-2 bg-green-600 text-white rounded px-3 py-1 hover:bg-green-700"
                       onClick={() => handlePayOrder(order._id)}
                     >
-                      <FaPaypal /> Pay Order
+                      <FaPaypal /> ادفع الطلب
                     </button>
                     <button
                       onClick={() => {
@@ -174,7 +174,7 @@ const Payment = () => {
                       }}
                       className="flex items-center gap-2 bg-red-600 text-white rounded px-3 py-1 hover:bg-red-700"
                     >
-                      <FaTrash /> Delete
+                      <FaTrash /> حذف الطلب
                     </button>
                   </td>
                 </tr>
