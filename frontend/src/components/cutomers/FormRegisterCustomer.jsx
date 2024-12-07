@@ -118,6 +118,7 @@ const FormRegisterCustomer = ({
     try {
       const res = await fetch(url, {
         method: _id ? "PUT" : "POST",
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
