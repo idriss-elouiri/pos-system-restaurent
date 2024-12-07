@@ -55,7 +55,8 @@ export const loginHandler = async (req, res, next) => {
     return res.status(200)
       .cookie("access_token", token, {
         httpOnly: true,
-        secure: false, // تأكد من تعيين secure بناءً على البيئة (false في بيئة التطوير)
+        secure: process.env.NODE_ENV === 'production', 
+        sameSite: 'None'
       })
       .json(rest);
   } catch (error) {
@@ -80,6 +81,8 @@ export const googleHandler = async (req, res, next) => {
       return res.status(200)
         .cookie("access_token", token, {
           httpOnly: true,
+          secure: process.env.NODE_ENV === 'production', 
+          sameSite: 'None'
         })
         .json(rest); // Return here to prevent further execution
     } else {
@@ -104,6 +107,8 @@ export const googleHandler = async (req, res, next) => {
       return res.status(200)
         .cookie("access_token", token, {
           httpOnly: true,
+          secure: process.env.NODE_ENV === 'production', 
+          sameSite: 'None'
         })
         .json(rest); // Return here to prevent further execution
     }
